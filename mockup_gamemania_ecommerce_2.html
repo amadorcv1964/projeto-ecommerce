@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Mania | E-commerce Gamer Oficial</title>
+    <style>
+        :root {
+            /* Paleta Siemens Corporativa Aplicada ao Universo Gamer */
+            --siemens-navy: #001826;
+            --siemens-dark-bg: #0B192C;
+            --siemens-card-bg: #14243B;
+            --siemens-card-border: #1E3E62;
+            --siemens-teal: #00828A;
+            --siemens-petrol: #00646E;
+            --siemens-cyan: #00A3E0;
+            --siemens-white: #FFFFFF;
+            --siemens-text-muted: #94A3B8;
+            --siemens-green-pix: #10B981;
+            --siemens-accent-red: #EF4444;
+            --siemens-gray-surface: #1E293B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--siemens-dark-bg);
+            color: var(--siemens-white);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Topbar de Avisos */
+        .topbar {
+            background-color: var(--siemens-navy);
+            border-bottom: 1px solid var(--siemens-card-border);
+            padding: 6px 20px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar-links a {
+            color: var(--siemens-cyan);
+            text-decoration: none;
+            margin-left: 15px;
+            font-weight: 500;
+        }
+
+        .topbar-highlight {
+            color: var(--siemens-green-pix);
+            font-weight: 600;
+        }
+
+        /* Header Principal */
+        header {
+            background-color: var(--siemens-dark-bg);
+            border-bottom: 1px solid var(--siemens-card-border);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--siemens-teal), var(--siemens-cyan));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 163, 224, 0.4);
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--siemens-white);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--siemens-cyan);
+        }
+
+        /* Barra de Busca Preditiva */
+        .search-container {
+            flex: 1;
+            max-width: 580px;
+            position: relative;
+        }
+
+        .search-box {
+            display: flex;
+            background-color: var(--siemens-gray-surface);
+            border: 1px solid var(--siemens-card-border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--siemens-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.2);
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 16px;
+            color: var(--siemens-white);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-btn {
+            background-color: var(--siemens-teal);
+            border: none;
+            color: var(--siemens-white);
+            padding: 0 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .search-btn:hover {
+            background-color: var(--siemens-petrol);
+        }
+
+        /* Dropdown de Busca Preditiva */
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--siemens-card-bg);
+            border: 1px solid var(--siemens-card-border);
+            border-radius: 8px;
+            margin-top: 6px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 200;
+        }
+
+        .search-item {
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .search-item:hover {
+            background-color: rgba(0, 130, 138, 0.2);
+        }
+
+        /* Header Ações */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--siemens-white);
+            text-decoration: none;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .action-item:hover {
+            color: var(--siemens-cyan);
+        }
+
+        .cart-badge {
+            background-color: var(--siemens-teal);
+            color: var(--siemens-white);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 12px;
+            margin-left: 4px;
+        }
+
+        /* Barra de Departamentos */
+        .nav-departments {
+            background-color: var(--siemens-navy);
+            border-bottom: 1px solid var(--siemens-card-border);
+            padding: 8px 24px;
+        }
+
+        .departments-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .nav-link {
+            color: var(--siemens-text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--siemens-cyan);
+            border-bottom-color: var(--siemens-cyan);
+        }
+
+        .nav-link.pix-highlight {
+            color: var(--siemens-green-pix);
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, #001826 0%, #0B192C 50%, #00334E 100%);
+            border-bottom: 1px solid var(--siemens-card-border);
+            padding: 40px 24px;
+        }
+
+        .hero-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: rgba(0, 130, 138, 0.25);
+            border: 1px solid var(--siemens-teal);
+            color: var(--siemens-cyan);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .hero-title span {
+            color: var(--siemens-cyan);
+        }
+
+        .hero-desc {
+            color: var(--siemens-text-muted);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--siemens-teal);
+            color: var(--siemens-white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--siemens-petrol);
+            box-shadow: 0 4px 12px rgba(0, 130, 138, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--siemens-card-border);
+            color: var(--siemens-white);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--siemens-cyan);
+            color: var(--siemens-cyan);
+        }
+
+        .hero-card-preview {
+            background-color: var(--siemens-card-bg);
+            border: 1px solid var(--siemens-card-border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .hero-card-tag {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background-color: var(--siemens-green-pix);
+            color: #000;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        /* Seção de Vídeos Curtos / Gameplay Benchmark (RF26) */
+        .section {
+            max-width: 1280px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--siemens-card-border);
+            padding-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title span {
+            color: var(--siemens-cyan);
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            color: var(--siemens-text-muted);
+            margin-top: 4px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background-color: var(--siemens-card-bg);
+            border: 1px solid var(--siemens-card-border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--siemens-cyan);
+        }
+
+        .video-thumbnail {
+            height: 180px;
+            background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .video-badge-fps {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.75);
+            border: 1px solid var(--siemens-green-pix);
+            color: var(--siemens-green-pix);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .play-btn-circle {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(0, 130, 138, 0.85);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .video-card:hover .play-btn-circle {
+            transform: scale(1.15);
+            background-color: var(--siemens-cyan);
+        }
+
+        .video-info {
+            padding: 14px 16px;
+        }
+
+        .video-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .video-desc {
+            font-size: 12px;
+            color: var(--siemens-text-muted);
+        }
+
+        /* Grade de Produtos */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: var(--siemens-card-bg);
+            border: 1px solid var(--siemens-card-border);
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            border-color: var(--siemens-cyan);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .product-badges {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .badge-pix {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--siemens-green-pix);
+            border: 1px solid var(--siemens-green-pix);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .badge-sp {
+            background-color: rgba(0, 163, 224, 0.15);
+            color: var(--siemens-cyan);
+            border: 1px solid var(--siemens-cyan);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .product-img-box {
+            height: 160px;
+            background-color: #070F1E;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            font-size: 40px;
+            color: var(--siemens-cyan);
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--siemens-white);
+            margin-bottom: 8px;
+            min-height: 40px;
+        }
+
+        .product-specs {
+            font-size: 11px;
+            color: var(--siemens-text-muted);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .product-pricing {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 12px;
+        }
+
+        .old-price {
+            font-size: 11px;
+            color: var(--siemens-text-muted);
+            text-decoration: line-through;
+        }
+
+        .pix-price {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--siemens-green-pix);
+        }
+
+        .pix-label {
+            font-size: 11px;
+            color: var(--siemens-green-pix);
+            font-weight: 600;
+        }
+
+        .installment-price {
+            font-size: 11px;
+            color: var(--siemens-text-muted);
+            margin-bottom: 14px;
+        }
+
+        .btn-card {
+            width: 100%;
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        /* Mini-Cart Drawer (Reserva de Carrinho RF06/RF07) */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 998;
+            display: none;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            height: 100vh;
+            background-color: var(--siemens-card-bg);
+            border-left: 1px solid var(--siemens-card-border);
+            z-index: 999;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s ease;
+        }
+
+        .cart-drawer.open {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--siemens-card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .cart-close {
+            background: none;
+            border: none;
+            color: var(--siemens-white);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Banner de Reserva de Estoque (15 min) */
+        .reservation-banner {
+            background: rgba(0, 130, 138, 0.2);
+            border-bottom: 1px solid var(--siemens-teal);
+            padding: 10px 16px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .timer-highlight {
+            color: #FBBF24;
+            font-weight: 800;
+            font-size: 13px;
+            font-family: monospace;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            background-color: #070F1E;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--siemens-cyan);
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .cart-item-price {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--siemens-green-pix);
+        }
+
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid var(--siemens-card-border);
+            background-color: var(--siemens-navy);
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        /* Perguntas Frequentes / FAQ (RF23) */
+        .faq-section {
+            background-color: var(--siemens-card-bg);
+            border: 1px solid var(--siemens-card-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 40px;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 0;
+        }
+
+        .faq-q {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--siemens-white);
+            margin-bottom: 6px;
+        }
+
+        .faq-a {
+            font-size: 13px;
+            color: var(--siemens-text-muted);
+            padding-left: 12px;
+            border-left: 2px solid var(--siemens-teal);
+        }
+
+        .faq-badge {
+            background-color: var(--siemens-teal);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        /* Rodapé Oficial */
+        footer {
+            background-color: var(--siemens-navy);
+            border-top: 1px solid var(--siemens-card-border);
+            padding: 40px 24px 20px;
+            margin-top: 60px;
+            font-size: 13px;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            color: var(--siemens-cyan);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-col ul li a {
+            color: var(--siemens-text-muted);
+            text-decoration: none;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--siemens-white);
+        }
+
+        .footer-bottom {
+            max-width: 1280px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+            text-align: center;
+            color: var(--siemens-text-muted);
+            font-size: 12px;
+        }
+
+        .footer-ai-disclaimer {
+            margin-top: 6px;
+            font-size: 11px;
+            color: #64748B;
+        }
+
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: #25D366;
+            color: white;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            text-decoration: none;
+            font-size: 26px;
+            z-index: 900;
+            transition: transform 0.2s;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div>
+            <span>📍 Loja Física: <strong>Centro de São Paulo</strong></span> | 
+            <span class="topbar-highlight">⚡ 15% de Desconto no Pix à Vista</span> | 
+            <span>🚚 Retirada Grátis na Loja ou Frete Nacional</span>
+        </div>
+        <div class="topbar-links">
+            <a href="#rastreio">Rastrear Pedido</a>
+            <a href="#ajuda">Atendimento Consultivo</a>
+        </div>
+    </div>
+
+    <!-- Header Principal -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🎮</div>
+                <div class="logo-text">GAME<span>MANIA</span></div>
+            </a>
+
+            <!-- Busca Preditiva -->
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Buscar placas de vídeo, processadores, periféricos..." oninput="handleSearch(this.value)">
+                    <button class="search-btn">Buscar</button>
+                </div>
+                <div id="searchDropdown" class="search-dropdown">
+                    <div class="search-item" onclick="selectSearch('RTX 4060 8GB GDDR6')">
+                        <span>🔥 <strong>RTX 4060</strong> 8GB GDDR6</span>
+                        <span style="color: var(--siemens-green-pix)">R$ 1.999,00 no Pix</span>
+                    </div>
+                    <div class="search-item" onclick="selectSearch('Ryzen 7 5700X3D')">
+                        <span>⚡ Processador AMD <strong>Ryzen 7 5700X3D</strong></span>
+                        <span style="color: var(--siemens-green-pix)">R$ 1.349,00 no Pix</span>
+                    </div>
+                    <div class="search-item" onclick="selectSearch('Teclado Mecânico RGB Switch Red')">
+                        <span>⌨️ <strong>Teclado Mecânico</strong> RGB Switch Red</span>
+                        <span style="color: var(--siemens-green-pix)">R$ 289,00 no Pix</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="header-actions">
+                <div class="action-item">
+                    <span>👤 Minha Conta</span>
+                </div>
+                <div class="action-item" onclick="toggleCart()">
+                    <span>🛒 Carrinho</span>
+                    <span id="cartCount" class="cart-badge">2</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Barra de Departamentos -->
+    <div class="nav-departments">
+        <div class="departments-container">
+            <a href="#" class="nav-link active">Hardware</a>
+            <a href="#" class="nav-link">Placas de Vídeo</a>
+            <a href="#" class="nav-link">Processadores</a>
+            <a href="#" class="nav-link">Periféricos</a>
+            <a href="#" class="nav-link">Monitores</a>
+            <a href="#" class="nav-link">Monte seu PC</a>
+            <a href="#" class="nav-link">Consoles</a>
+            <a href="#" class="nav-link pix-highlight">🔥 Ofertas 15% OFF no Pix</a>
+        </div>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero">
+        <div class="hero-container">
+            <div>
+                <div class="hero-badge">
+                    <span>🚀 Expansão Oficial Game Mania</span>
+                </div>
+                <h1 class="hero-title">A loja gamer do centro de SP agora <span>online para todo o Brasil.</span></h1>
+                <p class="hero-desc">Hardware de alta performance com consultoria técnica especializada. Pague à vista com 15% de desconto no Pix ou parcele em até 12x (em até 2 cartões).</p>
+                <div class="hero-buttons">
+                    <a href="#catalogo" class="btn btn-primary">Ver Catálogo de Hardware</a>
+                    <a href="#videos" class="btn btn-secondary">▶ Ver Jogos em Ação</a>
+                </div>
+            </div>
+            <div>
+                <div class="hero-card-preview">
+                    <div class="hero-card-tag">-15% NO PIX</div>
+                    <div style="font-size: 13px; color: var(--siemens-cyan); font-weight: 700; margin-bottom: 8px;">DESTAQUE DA SEMANA</div>
+                    <h3 style="font-size: 18px; margin-bottom: 12px;">PC Gamer Game Mania Challenger</h3>
+                    <p style="font-size: 12px; color: var(--siemens-text-muted); margin-bottom: 16px;">Ryzen 7 5700X3D • RTX 4060 8GB • 32GB RAM DDR4 • SSD NVMe 1TB</p>
+                    <div style="font-size: 26px; font-weight: 800; color: var(--siemens-green-pix); margin-bottom: 4px;">R$ 4.799,00</div>
+                    <div style="font-size: 12px; color: var(--siemens-text-muted); margin-bottom: 16px;">ou 12x de R$ 470,50 no cartão (ou em 2 cartões)</div>
+                    <button class="btn btn-primary btn-card" onclick="addToCart('PC Gamer Challenger', 4799.00)">Adicionar com Reserva de 15 min</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Vídeos Curtos / Gameplay Benchmark (RF26) -->
+    <section class="section" id="videos">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title"><span>▶</span> Gameplay Benchmarks & Demonstrações em Vídeo</h2>
+                <p class="section-subtitle">Veja o hardware rodando na prática com taxas de FPS e testes acústicos antes de comprar.</p>
+            </div>
+        </div>
+
+        <div class="video-grid">
+            <!-- Card Vídeo 1 -->
+            <div class="video-card">
+                <div class="video-thumbnail" onclick="playMockVideo('RTX 4060 no Cyberpunk 2077: 88 FPS Médio')">
+                    <div class="video-badge-fps">⚡ 88 FPS • 1080p Ultra</div>
+                    <div class="play-btn-circle">▶</div>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">RTX 4060 8GB | Cyberpunk 2077</div>
+                    <div class="video-desc">Teste de benchmark com Ray Tracing e DLSS 3 em tempo real.</div>
+                </div>
+            </div>
+
+            <!-- Card Vídeo 2 -->
+            <div class="video-card">
+                <div class="video-thumbnail" onclick="playMockVideo('Teclado Mecânico RGB: Sound Test de Switch Red')">
+                    <div class="video-badge-fps">🔊 Sound Test • Switch Red</div>
+                    <div class="play-btn-circle">▶</div>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Teclado Mecânico Pro | Teste Acústico</div>
+                    <div class="video-desc">Ouça o clique linear e suave dos switches ideais para jogos competitivos.</div>
+                </div>
+            </div>
+
+            <!-- Card Vídeo 3 -->
+            <div class="video-card">
+                <div class="video-thumbnail" onclick="playMockVideo('Monitor 165Hz: Teste de Fluidez e Ghosting')">
+                    <div class="video-badge-fps">🏎️ 165Hz • 1ms Response</div>
+                    <div class="play-btn-circle">▶</div>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">Monitor 24" 165Hz | Teste de Fluidez</div>
+                    <div class="video-desc">Demonstração de rastreio de movimento sem efeito fantasma (ghosting).</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grade de Produtos em Destaque -->
+    <section class="section" id="catalogo">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title"><span>🛒</span> Produtos em Destaque</h2>
+                <p class="section-subtitle">Garantia oficial, nota fiscal e desconto de 15% à vista no Pix.</p>
+            </div>
+        </div>
+
+        <div class="products-grid">
+            <!-- Produto 1 -->
+            <div class="product-card">
+                <div class="product-badges">
+                    <span class="badge-pix">15% OFF PIX</span>
+                    <span class="badge-sp">Retirada SP</span>
+                </div>
+                <div class="product-img-box">📟</div>
+                <div class="product-name">Placa de Vídeo RTX 4060 8GB GDDR6</div>
+                <div class="product-specs">DLSS 3 • Ray Tracing • PCI-Express 4.0 • 3x DisplayPort / 1x HDMI</div>
+                <div class="product-pricing">
+                    <div class="old-price">R$ 2.399,00</div>
+                    <div class="pix-price">R$ 1.999,00</div>
+                    <div class="pix-label">à vista no Pix (15% de desconto)</div>
+                    <div class="installment-price">ou 12x de R$ 195,98 sem juros</div>
+                    <button class="btn btn-primary btn-card" onclick="addToCart('Placa de Vídeo RTX 4060 8GB', 1999.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+
+            <!-- Produto 2 -->
+            <div class="product-card">
+                <div class="product-badges">
+                    <span class="badge-pix">15% OFF PIX</span>
+                    <span class="badge-sp">Retirada SP</span>
+                </div>
+                <div class="product-img-box">🧠</div>
+                <div class="product-name">Processador AMD Ryzen 7 5700X3D</div>
+                <div class="product-specs">8 Núcleos / 16 Threads • 4.1GHz Max • Cache 100MB 3D V-Cache • AM4</div>
+                <div class="product-pricing">
+                    <div class="old-price">R$ 1.599,00</div>
+                    <div class="pix-price">R$ 1.349,00</div>
+                    <div class="pix-label">à vista no Pix (15% de desconto)</div>
+                    <div class="installment-price">ou 12x de R$ 132,25 sem juros</div>
+                    <button class="btn btn-primary btn-card" onclick="addToCart('Processador AMD Ryzen 7 5700X3D', 1349.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+
+            <!-- Produto 3 -->
+            <div class="product-card">
+                <div class="product-badges">
+                    <span class="badge-pix">15% OFF PIX</span>
+                </div>
+                <div class="product-img-box">⌨️</div>
+                <div class="product-name">Teclado Mecânico RGB Switch Red Pro</div>
+                <div class="product-specs">Layout ABNT2 • Anti-Ghosting 100% • Cabo USB-C Removível</div>
+                <div class="product-pricing">
+                    <div class="old-price">R$ 349,00</div>
+                    <div class="pix-price">R$ 289,00</div>
+                    <div class="pix-label">à vista no Pix (15% de desconto)</div>
+                    <div class="installment-price">ou 6x de R$ 56,66 sem juros</div>
+                    <button class="btn btn-primary btn-card" onclick="addToCart('Teclado Mecânico RGB Switch Red', 289.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+
+            <!-- Produto 4 -->
+            <div class="product-card">
+                <div class="product-badges">
+                    <span class="badge-pix">15% OFF PIX</span>
+                    <span class="badge-sp">Retirada SP</span>
+                </div>
+                <div class="product-img-box">🖥️</div>
+                <div class="product-name">Monitor Gamer 24" IPS 165Hz 1ms</div>
+                <div class="product-specs">Full HD • FreeSync Premium • HDR10 • Ajuste de Altura e Inclinação</div>
+                <div class="product-pricing">
+                    <div class="old-price">R$ 999,00</div>
+                    <div class="pix-price">R$ 849,00</div>
+                    <div class="pix-label">à vista no Pix (15% de desconto)</div>
+                    <div class="installment-price">ou 10x de R$ 99,88 sem juros</div>
+                    <button class="btn btn-primary btn-card" onclick="addToCart('Monitor Gamer 24 pol 165Hz', 849.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Módulo FAQ e Perguntas e Respostas (RF23) -->
+    <section class="section">
+        <div class="faq-section">
+            <h3 style="font-size: 18px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                <span>💬</span> Perguntas Frequentes & Dúvidas de Clientes
+            </h3>
+            <p style="font-size: 13px; color: var(--siemens-text-muted); margin-bottom: 18px;">
+                Respostas diretas da nossa equipe técnica e espaço para novas dúvidas de compatibilidade.
+            </p>
+
+            <div class="faq-item">
+                <div class="faq-q">❓ A placa de vídeo RTX 4060 exige troca de fonte se eu tiver uma fonte de 500W?</div>
+                <div class="faq-a"><span class="faq-badge">Equipe Game Mania</span> Não! A RTX 4060 é muito eficiente (consome cerca de 115W). Uma fonte de 500W de boa qualidade (80 Plus) suporta com folga.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">❓ Posso comprar no site com desconto de 15% do Pix e retirar na loja física do centro de SP hoje mesmo?</div>
+                <div class="faq-a"><span class="faq-badge">Equipe Game Mania</span> Sim! Basta selecionar a opção "Retirar na Loja do Centro de SP" no checkout. A separação ocorre em até 2 horas úteis após a confirmação do Pix.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">❓ Consigo dividir o valor de um PC completo em dois cartões de crédito?</div>
+                <div class="faq-a"><span class="faq-badge">Equipe Game Mania</span> Sim! Nosso checkout permite ratear o valor total entre 2 cartões de crédito diferentes, parcelando cada um em até 12 vezes.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Drawer Lateral do Carrinho com Reserva (RF06 / RF07) -->
+    <div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
+    <div id="cartDrawer" class="cart-drawer">
+        <div class="cart-header">
+            <div class="cart-title">Seu Carrinho de Compras</div>
+            <button class="cart-close" onclick="toggleCart()">✕</button>
+        </div>
+
+        <!-- Banner com Cronômetro de Reserva -->
+        <div class="reservation-banner">
+            <span>⏱️ Estoque reservado por:</span>
+            <span id="reservationTimer" class="timer-highlight">14:52</span>
+        </div>
+
+        <div class="cart-items" id="cartItemsList">
+            <div class="cart-item">
+                <div class="cart-item-img">📟</div>
+                <div class="cart-item-details">
+                    <div class="cart-item-title">Placa de Vídeo RTX 4060 8GB GDDR6</div>
+                    <div style="font-size: 11px; color: var(--siemens-text-muted)">Qtd: 1 un</div>
+                    <div class="cart-item-price">R$ 1.999,00 à vista no Pix</div>
+                </div>
+            </div>
+            <div class="cart-item">
+                <div class="cart-item-img">⌨️</div>
+                <div class="cart-item-details">
+                    <div class="cart-item-title">Teclado Mecânico RGB Switch Red</div>
+                    <div style="font-size: 11px; color: var(--siemens-text-muted)">Qtd: 1 un</div>
+                    <div class="cart-item-price">R$ 289,00 à vista no Pix</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-footer">
+            <div style="font-size: 12px; color: var(--siemens-cyan); margin-bottom: 8px;">
+                📍 Modalidade: <strong>Retirada Grátis no Centro de SP</strong>
+            </div>
+            <div class="cart-total-row">
+                <span>Total com 15% OFF:</span>
+                <span style="color: var(--siemens-green-pix);" id="cartTotal">R$ 2.288,00</span>
+            </div>
+            <button class="btn btn-primary btn-card" style="margin-bottom: 8px;" onclick="alert('Redirecionando para o Checkout Transparente (Identificação -> Entrega -> Pagamento Pix/2 Cartões)...')">
+                Finalizar Compra Segura
+            </button>
+            <div style="font-size: 11px; text-align: center; color: var(--siemens-text-muted)">
+                🔒 Ambiente protegido por SSL de 256 bits e Antifraude
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão Flutuante de WhatsApp (RF18) -->
+    <a href="#" class="whatsapp-float" title="Tire dúvidas com nossa especialista gamer" onclick="alert('Abrindo atendimento consultivo via WhatsApp da Game Mania...')">
+        💬
+    </a>
+
+    <!-- Rodapé Oficial -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>GAME MANIA</h4>
+                <p style="color: var(--siemens-text-muted); font-size: 12px; margin-bottom: 12px;">Especialistas em hardware gamer e computadores de alta performance. Da loja física no centro de São Paulo para o Brasil todo.</p>
+                <p style="font-size: 12px;">📍 Rua Santa Ifigênia, Centro - São Paulo/SP</p>
+            </div>
+            <div class="footer-col">
+                <h4>Departamentos</h4>
+                <ul>
+                    <li><a href="#">Placas de Vídeo (NVIDIA / AMD)</a></li>
+                    <li><a href="#">Processadores Gamer</a></li>
+                    <li><a href="#">Periféricos e Acessórios</a></li>
+                    <li><a href="#">Computadores Montados</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Formas de Pagamento</h4>
+                <p style="color: var(--siemens-green-pix); font-weight: 700; margin-bottom: 4px;">⚡ 15% OFF no Pix à Vista</p>
+                <p style="color: var(--siemens-text-muted); font-size: 12px; margin-bottom: 4px;">💳 Em até 12x Sem Juros</p>
+                <p style="color: var(--siemens-text-muted); font-size: 12px;">✌️ Suporte a 2 Cartões de Crédito</p>
+            </div>
+            <div class="footer-col">
+                <h4>Segurança & Garantia</h4>
+                <p style="color: var(--siemens-text-muted); font-size: 12px; margin-bottom: 6px;">🛡️ Módulo de RMA e Garantia Legal</p>
+                <p style="color: var(--siemens-text-muted); font-size: 12px; margin-bottom: 6px;">🔒 Conformidade PCI-DSS e LGPD</p>
+                <p style="color: var(--siemens-text-muted); font-size: 12px;">📦 Envio segurado para todo o Brasil</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>© 2026 Game Mania Comércio de Eletrônicos Ltda. Todos os direitos reservados.</div>
+            <div class="footer-ai-disclaimer">Documento gerado com apoio de Inteligência Artificial — Mockup de Proposta Conceitual Front-End (SENAI UC09)</div>
+        </div>
+    </footer>
+
+    <!-- Scripts de Interatividade -->
+    <script>
+        // Busca Preditiva Interativa
+        function handleSearch(val) {
+            const dropdown = document.getElementById('searchDropdown');
+            if (val.trim().length >= 2) {
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        function selectSearch(text) {
+            document.getElementById('searchInput').value = text;
+            document.getElementById('searchDropdown').style.display = 'none';
+        }
+
+        // Toggle do Mini-Cart Lateral
+        function toggleCart() {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            if (drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                overlay.style.display = 'none';
+            } else {
+                drawer.classList.add('open');
+                overlay.style.display = 'block';
+            }
+        }
+
+        // Adicionar ao Carrinho
+        let cartTotalValue = 2288.00;
+        let cartItemCount = 2;
+
+        function addToCart(name, price) {
+            cartItemCount++;
+            cartTotalValue += price;
+            document.getElementById('cartCount').innerText = cartItemCount;
+            document.getElementById('cartTotal').innerText = 'R$ ' + cartTotalValue.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+
+            const list = document.getElementById('cartItemsList');
+            const newItem = document.createElement('div');
+            newItem.className = 'cart-item';
+            newItem.innerHTML = `
+                <div class="cart-item-img">✨</div>
+                <div class="cart-item-details">
+                    <div class="cart-item-title">${name}</div>
+                    <div style="font-size: 11px; color: var(--siemens-text-muted)">Qtd: 1 un (Novo)</div>
+                    <div class="cart-item-price">R$ ${price.toLocaleString('pt-BR', {minimumFractionDigits: 2})} no Pix</div>
+                </div>
+            `;
+            list.appendChild(newItem);
+            toggleCart();
+        }
+
+        // Simulação de Vídeo / Benchmark
+        function playMockVideo(title) {
+            alert('▶ [Player de Vídeo Gamer]: Reproduzindo ' + title + '\nTaxa de quadros e acústica em alta definição ativadas com sucesso.');
+        }
+
+        // Cronômetro Regressivo de Reserva de Carrinho (15 min)
+        let timeLeft = 14 * 60 + 52;
+        setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                document.getElementById('reservationTimer').innerText = 
+                    (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

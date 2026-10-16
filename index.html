@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Mania | Portal de Entregas SENAI UC09</title>
+    <style>
+        :root {
+            --siemens-navy: #001826;
+            --siemens-dark-bg: #0B192C;
+            --siemens-card-bg: #14243B;
+            --siemens-card-border: #1E3E62;
+            --siemens-teal: #00828A;
+            --siemens-cyan: #00A3E0;
+            --siemens-white: #FFFFFF;
+            --siemens-text-muted: #94A3B8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--siemens-navy);
+            color: var(--siemens-white);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Barra de Controle de Avaliação do SENAI */
+        .portal-bar {
+            background-color: #050E17;
+            border-bottom: 2px solid var(--siemens-card-border);
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            flex-shrink: 0;
+        }
+
+        .portal-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, var(--siemens-teal), var(--siemens-cyan));
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-meta {
+            font-size: 12px;
+            color: var(--siemens-text-muted);
+            line-height: 1.3;
+        }
+
+        .brand-meta strong {
+            color: var(--siemens-white);
+        }
+
+        /* Seletor de Telas */
+        .device-selector {
+            display: flex;
+            background-color: var(--siemens-dark-bg);
+            border: 1px solid var(--siemens-card-border);
+            border-radius: 24px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .device-btn {
+            background: none;
+            border: none;
+            color: var(--siemens-text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .device-btn:hover {
+            color: var(--siemens-white);
+        }
+
+        .device-btn.active {
+            background: linear-gradient(135deg, var(--siemens-teal), var(--siemens-cyan));
+            color: var(--siemens-white);
+            box-shadow: 0 2px 10px rgba(0, 163, 224, 0.4);
+        }
+
+        .portal-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-external {
+            background-color: var(--siemens-card-bg);
+            border: 1px solid var(--siemens-card-border);
+            color: var(--siemens-cyan);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-external:hover {
+            border-color: var(--siemens-cyan);
+            background-color: rgba(0, 163, 224, 0.1);
+        }
+
+        /* Container do Visualizador */
+        .viewport-wrapper {
+            flex: 1;
+            background-color: #03080F;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Molduras Simuladas */
+        .frame-desktop {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            background: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .frame-mobile {
+            width: 400px;
+            height: 820px;
+            max-height: 95%;
+            border: 8px solid #1E293B;
+            border-radius: 36px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 0 2px var(--siemens-cyan);
+            background: #0B192C;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .frame-tablet {
+            width: 768px;
+            height: 860px;
+            max-height: 95%;
+            border: 10px solid #1E293B;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 0 2px var(--siemens-teal);
+            background: #0B192C;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .portal-footer {
+            background-color: #050E17;
+            border-top: 1px solid var(--siemens-card-border);
+            padding: 6px 24px;
+            font-size: 11px;
+            color: var(--siemens-text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de Controle Superior para Avaliação -->
+    <header class="portal-bar">
+        <div class="portal-brand">
+            <div class="brand-badge">🎮 GAME MANIA</div>
+            <div class="brand-meta">
+                <strong>SENAI Escola Jorge Mahfuz</strong> • UC09 Codificação Front-End<br>
+                Aluno: <strong>Amador Corrêa Vicente</strong> | Docente: <strong>Prof. Eduardo Casavella</strong>
+            </div>
+        </div>
+
+        <!-- Seletor de Telas -->
+        <div class="device-selector">
+            <button class="device-btn active" id="btn-desktop" onclick="setDevice('desktop')">
+                💻 Desktop Oficial
+            </button>
+            <button class="device-btn" id="btn-mobile" onclick="setDevice('mobile')">
+                📱 Smartphone (390px)
+            </button>
+            <button class="device-btn" id="btn-tablet" onclick="setDevice('tablet')">
+                📟 Tablet (768px)
+            </button>
+            <button class="device-btn" id="btn-rafe" onclick="setDevice('rafe')">
+                📐 Rafes & Wireframes
+            </button>
+        </div>
+
+        <div class="portal-actions">
+            <a href="desktop.html" target="_blank" class="btn-external" id="btnOpenDirect">
+                ↗ Abrir Aba Solta
+            </a>
+        </div>
+    </header>
+
+    <!-- Área de Exibição -->
+    <main class="viewport-wrapper">
+        <iframe id="mainViewer" src="desktop.html" class="frame-desktop" title="Visualizador do E-commerce"></iframe>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="portal-footer">
+        <div>Repositório: <strong>github.com/amadorcv1964/projeto-ecommerce</strong></div>
+        <div>Documento gerado com apoio de Inteligência Artificial — Conformidade Siemens & SENAI UC09</div>
+    </footer>
+
+    <script>
+        const viewer = document.getElementById('mainViewer');
+        const openDirect = document.getElementById('btnOpenDirect');
+
+        function setDevice(type) {
+            document.querySelectorAll('.device-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + type).classList.add('active');
+
+            // Parâmetro timestamp para forçar quebra de cache imediata
+            const cacheBuster = '?t=' + new Date().getTime();
+
+            if (type === 'desktop') {
+                viewer.className = 'frame-desktop';
+                viewer.src = 'desktop.html' + cacheBuster;
+                openDirect.href = 'desktop.html';
+                openDirect.innerText = '↗ Abrir Desktop em Nova Aba';
+            } else if (type === 'mobile') {
+                viewer.className = 'frame-mobile';
+                viewer.src = 'mobile_tablet.html' + cacheBuster;
+                openDirect.href = 'mobile_tablet.html';
+                openDirect.innerText = '↗ Abrir Mobile em Nova Aba';
+            } else if (type === 'tablet') {
+                viewer.className = 'frame-tablet';
+                viewer.src = 'mobile_tablet.html' + cacheBuster;
+                openDirect.href = 'mobile_tablet.html';
+                openDirect.innerText = '↗ Abrir Tablet em Nova Aba';
+            } else if (type === 'rafe') {
+                viewer.className = 'frame-desktop';
+                viewer.src = 'rafe.html' + cacheBuster;
+                openDirect.href = 'rafe.html';
+                openDirect.innerText = '↗ Abrir Rafe em Nova Aba';
+            }
+        }
+    </script>
+</body>
+</html>
