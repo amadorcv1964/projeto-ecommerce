@@ -33,6 +33,67 @@
             padding-bottom: 60px;
         }
 
+        /* Barra de Avaliação SENAI - Alternador de Dispositivos */
+        .evaluator-bar {
+            background: linear-gradient(90deg, #090e17 0%, #1e293b 100%);
+            border-bottom: 2px solid var(--siemens-cyan);
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--siemens-text-muted);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 150;
+        }
+        .evaluator-title {
+            color: var(--siemens-cyan);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .device-selector-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn-device-switch {
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 800;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-device-active {
+            background: var(--siemens-cyan);
+            color: #000000;
+            box-shadow: 0 2px 8px var(--siemens-cyan-glow);
+        }
+        .btn-device-link {
+            background: #0f172a;
+            color: #38bdf8;
+            border: 1px solid #38bdf8;
+        }
+        .btn-device-link:hover {
+            background: #38bdf8;
+            color: #000000;
+        }
+        .btn-device-rafe {
+            background: #0f172a;
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+        .btn-device-rafe:hover {
+            background: #f59e0b;
+            color: #000000;
+        }
+
         /* Topbar */
         .topbar {
             background-color: #020617;
@@ -463,6 +524,19 @@
     </style>
 </head>
 <body>
+
+    <!-- Barra de Navegação Multi-Dispositivo (Avaliação SENAI) -->
+    <div class="evaluator-bar">
+        <div class="evaluator-title">
+            <span>🎓 SENAI UC09 • Seleção de Layout:</span>
+            <span style="font-weight: normal; color: var(--siemens-white);">Navegue entre as versões responsivas desenvolvidas</span>
+        </div>
+        <div class="device-selector-group">
+            <a href="index.html" class="btn-device-switch btn-device-active">🖥️ Versão Desktop (Ativa)</a>
+            <a href="mobile_tablet.html" class="btn-device-switch btn-device-link">📱 Simulador Tablet & Mobile ➔</a>
+            <a href="rafe.html" class="btn-device-switch btn-device-rafe">📐 Ver Rafe / Wireframe ➔</a>
+        </div>
+    </div>
 
     <!-- Topbar -->
     <div class="topbar">
