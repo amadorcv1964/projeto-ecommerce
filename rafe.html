@@ -32,24 +32,25 @@
             background-color: var(--siemens-dark-bg);
             color: var(--siemens-white);
             line-height: 1.4;
-            padding: 24px 16px;
+            padding: 0 0 40px 0;
         }
 
         .header-title-box {
             max-width: 1200px;
-            margin: 0 auto 20px;
+            margin: 24px auto 20px;
             text-align: center;
         }
 
         .badge-senai {
             display: inline-block;
-            background-color: rgba(0, 130, 138, 0.2);
-            border: 1px solid var(--siemens-teal);
+            background: rgba(0, 163, 224, 0.15);
+            border: 1px solid var(--siemens-cyan);
             color: var(--siemens-cyan);
-            font-size: 11px;
-            font-weight: 700;
             padding: 4px 12px;
             border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             margin-bottom: 8px;
             text-transform: uppercase;
         }
@@ -57,10 +58,13 @@
         h1 {
             font-size: 26px;
             font-weight: 800;
-            letter-spacing: -0.5px;
+            color: var(--siemens-white);
             margin-bottom: 6px;
         }
-        h1 span { color: var(--siemens-cyan); }
+
+        h1 span {
+            color: var(--siemens-cyan);
+        }
 
         .subtitle {
             font-size: 13px;
@@ -69,18 +73,18 @@
             margin: 0 auto;
         }
 
-        /* Seletor de Abas do Rafe */
-        .tabs-nav {
+        /* Seletor de Vistas do Rafe */
+        .rafe-selector-bar {
             max-width: 1200px;
-            margin: 0 auto 24px;
+            margin: 20px auto;
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
-        .tab-btn {
-            background-color: var(--siemens-blueprint-bg);
+        .rafe-btn {
+            background: var(--siemens-blueprint-bg);
             border: 1px solid var(--siemens-border);
             color: var(--siemens-text-muted);
             padding: 10px 20px;
@@ -88,643 +92,497 @@
             font-size: 13px;
             font-weight: 700;
             cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s;
         }
 
-        .tab-btn:hover, .tab-btn.active {
-            background-color: var(--siemens-teal);
+        .rafe-btn:hover {
             border-color: var(--siemens-cyan);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 130, 138, 0.4);
+            color: var(--siemens-white);
         }
 
-        /* Container dos Rafes */
+        .rafe-btn.active {
+            background: var(--siemens-teal);
+            color: var(--siemens-white);
+            border-color: var(--siemens-teal);
+            box-shadow: 0 0 16px rgba(0, 130, 138, 0.5);
+        }
+
+        /* Container Principal do Blueprint */
+        .blueprint-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            background-color: var(--siemens-blueprint-bg);
+            border: 2px dashed var(--siemens-border-dashed);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+        }
+
+        /* Grid Pattern de Fundo para visual de Rafe/Wireframe Técnico */
+        .blueprint-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(to right, rgba(30, 62, 98, 0.2) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(30, 62, 98, 0.2) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            border-radius: 14px;
+        }
+
         .rafe-view {
             display: none;
-            max-width: 1200px;
-            margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .rafe-view.active {
             display: block;
-            animation: fadeIn 0.3s ease-in-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Moldura de Wireframe / Blueprint */
-        .wireframe-canvas {
-            background-color: var(--siemens-blueprint-bg);
-            border: 2px dashed var(--siemens-border-dashed);
-            border-radius: 12px;
-            padding: 24px;
+        /* Estilos dos Blocos Estruturais do Rafe */
+        .rafe-block {
+            background-color: var(--siemens-card-bg);
+            border: 1px solid var(--siemens-border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
             position: relative;
-            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
         }
 
-        .wireframe-canvas.tablet-frame {
+        .rafe-block-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--siemens-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .rafe-block-spec {
+            font-size: 10px;
+            color: var(--siemens-note);
+            background: rgba(251, 191, 36, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            font-family: monospace;
+        }
+
+        .rafe-inner-wire {
+            background: rgba(0, 24, 38, 0.6);
+            border: 1px dashed var(--siemens-border-dashed);
+            border-radius: 4px;
+            padding: 8px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--siemens-text-muted);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Visualização Desktop (1200px) */
+        .desktop-header-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr 340px;
+            gap: 12px;
+        }
+
+        .desktop-hero-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            min-height: 180px;
+        }
+
+        .desktop-catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        /* Visualização Tablet (768px) */
+        .tablet-mockup {
             max-width: 768px;
             margin: 0 auto;
         }
 
-        .wireframe-canvas.mobile-frame {
-            max-width: 390px;
-            margin: 0 auto;
-            border-radius: 36px;
-            border: 4px solid #1E3E62;
-            padding: 16px;
-        }
-
-        /* Blocos do Rafe (Esqueleto Arquitetural) */
-        .block-wire {
-            background-color: var(--siemens-card-bg);
-            border: 1px solid var(--siemens-border);
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 14px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--siemens-white);
-        }
-
-        .block-wire.dashed {
-            border: 1px dashed var(--siemens-cyan);
-            background-color: rgba(0, 163, 224, 0.05);
-        }
-
-        /* Anotação Técnica de UX/UI */
-        .ux-note {
-            position: absolute;
-            top: -9px;
-            right: 12px;
-            background-color: #000;
-            border: 1px solid var(--siemens-note);
-            color: var(--siemens-note);
-            font-size: 9px;
-            font-weight: 800;
-            padding: 1px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .ux-tag {
-            display: inline-block;
-            background-color: rgba(0, 130, 138, 0.25);
-            color: var(--siemens-cyan);
-            border: 1px solid var(--siemens-teal);
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 6px;
-        }
-
-        /* Grid de Colunas no Desktop */
-        .grid-12-demo {
+        .tablet-header-grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 12px;
-            margin-bottom: 14px;
+            grid-template-columns: 180px 1fr 140px;
+            gap: 10px;
         }
 
-        .grid-col-demo {
-            background-color: rgba(0, 130, 138, 0.1);
-            border: 1px dashed var(--siemens-border);
-            padding: 4px;
-            font-size: 9px;
-            color: var(--siemens-cyan);
-            text-align: center;
-            border-radius: 4px;
-        }
-
-        .header-row {
-            display: grid;
-            grid-template-columns: 2.5fr 6fr 3.5fr;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
-        .hero-row {
-            display: grid;
-            grid-template-columns: 8fr 4fr;
-            gap: 12px;
-            margin-bottom: 14px;
-            min-height: 180px;
-        }
-
-        .shorts-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 14px;
-            min-height: 120px;
-        }
-
-        .catalog-row-desktop {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 14px;
-            min-height: 160px;
-        }
-
-        .catalog-row-tablet {
+        .tablet-catalog-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-bottom: 14px;
         }
 
-        .catalog-row-mobile {
+        /* Visualização Celular / Mobile (390px) */
+        .mobile-mockup {
+            max-width: 390px;
+            margin: 0 auto;
+            border: 2px solid var(--siemens-border);
+            border-radius: 24px;
+            padding: 16px;
+            background: #000814;
+        }
+
+        .mobile-header-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-catalog-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
-            margin-bottom: 12px;
         }
 
-        .footer-row-desktop {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            min-height: 110px;
-        }
-
-        /* Detalhes do Mobile */
-        .mobile-notch {
-            width: 100px;
-            height: 18px;
-            background-color: #000;
-            border-radius: 10px;
-            margin: 0 auto 10px;
-        }
-
-        .bottom-nav-wire {
-            border: 2px solid var(--siemens-cyan);
-            background-color: var(--siemens-navy);
-            border-radius: 8px;
-            padding: 8px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 10px;
-            color: var(--siemens-white);
-            margin-top: 14px;
-        }
-
-        /* Tabela de Decisões de UX */
-        .decisions-table {
+        /* Matriz Comparativa de Arquitetura */
+        .matrix-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 16px;
             font-size: 12px;
         }
 
-        .decisions-table th {
-            background-color: var(--siemens-navy);
-            color: var(--siemens-cyan);
-            padding: 10px 12px;
+        .matrix-table th, .matrix-table td {
             border: 1px solid var(--siemens-border);
+            padding: 10px 14px;
             text-align: left;
         }
 
-        .decisions-table td {
-            background-color: var(--siemens-card-bg);
-            padding: 10px 12px;
-            border: 1px solid var(--siemens-border);
-            color: var(--siemens-white);
+        .matrix-table th {
+            background-color: var(--siemens-navy);
+            color: var(--siemens-cyan);
+            font-weight: 800;
         }
 
-        .decisions-table tr:nth-child(even) td {
-            background-color: #0E1E33;
+        .matrix-table tr:nth-child(even) {
+            background-color: rgba(17, 34, 56, 0.4);
         }
 
-        /* Rodapé de Governança */
+        /* Rodapé com Governança */
         .gov-footer {
             max-width: 1200px;
             margin: 30px auto 0;
+            padding-top: 16px;
+            border-top: 1px solid var(--siemens-border);
             text-align: center;
             font-size: 11px;
-            color: #64748B;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding-top: 14px;
+            color: var(--siemens-text-muted);
         }
     </style>
 </head>
 <body>
 
-    <!-- Cabeçalho Institucional -->
-    <div class="header-title-box">
-        <div class="badge-senai">SENAI UC09 • Situação de Aprendizagem 1 (SP1) • Desafio 2</div>
-        <h1>Rafe de Layout <span>(Wireframe Estrutural Arquitetural)</span></h1>
-        <p class="subtitle">
-            Representação dos blocos funcionais, hierarquia visual, fluxos de escaneamento e distribuição do grid de layout nas versões Desktop, Tablet e Celular para o E-commerce Game Mania.
-        </p>
+    <!-- Barra de Navegação Multi-Dispositivo (Avaliação SENAI) -->
+    <div style="background: linear-gradient(90deg, #090e17 0%, #1e293b 100%); border-bottom: 2px solid #00E676; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #94A3B8; position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+        <div style="color: #00E676; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+            <span>🎓 SENAI UC09 • Seleção de Layout:</span>
+            <span style="font-weight: normal; color: #FFFFFF;">Navegue entre as versões responsivas desenvolvidas</span>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="index.html" style="text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8;">🖥️ Voltar ao Desktop ➔</a>
+            <a href="mobile_tablet.html" style="text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8;">📱 Simulador Tablet & Mobile ➔</a>
+            <a href="rafe.html" style="text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; background: #f59e0b; color: #000000; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);">📐 Ver Rafe / Wireframe (Ativo)</a>
+        </div>
     </div>
 
-    <!-- Navegação de Abas -->
-    <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('desktop', this)">
-            🖥️ Rafe Desktop (1200px - Grid 12 Colunas)
+    <!-- Cabeçalho Institucional -->
+    <div class="header-title-box">
+        <span class="badge-senai">SENAI UC09 • Situação de Aprendizagem 1 (SP1) • Desafio 2</span>
+        <h1>Rafe de Layout <span>(Wireframe Estrutural Arquitetural)</span></h1>
+        <p class="subtitle">Representação dos blocos funcionais, hierarquia visual, fluxos de escaneamento e distribuição do grid de layout nas versões Desktop, Tablet e Celular para o E-commerce Game Mania.</p>
+    </div>
+
+    <!-- Seletor de Vistas -->
+    <div class="rafe-selector-bar">
+        <button class="rafe-btn active" onclick="switchRafe('desktop', this)">
+            💻 Rafe Desktop (1200px - Grid 12 Colunas)
         </button>
-        <button class="tab-btn" onclick="switchTab('tablet', this)">
+        <button class="rafe-btn" onclick="switchRafe('tablet', this)">
             📲 Rafe Tablet (768px - Grid 8 Colunas)
         </button>
-        <button class="tab-btn" onclick="switchTab('mobile', this)">
+        <button class="rafe-btn" onclick="switchRafe('mobile', this)">
             📱 Rafe Celular (390px - Mobile First)
         </button>
-        <button class="tab-btn" onclick="switchTab('decisions', this)">
+        <button class="rafe-btn" onclick="switchRafe('matrix', this)">
             📐 Matriz de Decisões de UX/UI
         </button>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 1. RAFE DESKTOP -->
-    <!-- ========================================== -->
-    <div id="tab-desktop" class="rafe-view active">
-        <div class="wireframe-canvas">
-            
-            <!-- Linha Guia de Grade (Grid 12) -->
-            <div class="grid-12-demo">
-                <div class="grid-col-demo">C1</div><div class="grid-col-demo">C2</div><div class="grid-col-demo">C3</div>
-                <div class="grid-col-demo">C4</div><div class="grid-col-demo">C5</div><div class="grid-col-demo">C6</div>
-                <div class="grid-col-demo">C7</div><div class="grid-col-demo">C8</div><div class="grid-col-demo">C9</div>
-                <div class="grid-col-demo">C10</div><div class="grid-col-demo">C11</div><div class="grid-col-demo">C12</div>
-            </div>
+    <!-- Container dos Modelos Arquiteturais -->
+    <div class="blueprint-container">
 
-            <!-- Topbar -->
-            <div class="block-wire" style="height: 38px; justify-content: space-between; padding: 0 16px;">
-                <span class="ux-note">ZONA 0: CONFIANÇA & CONVÊNIOS</span>
-                <span>[LOCALIZAÇÃO: LOJA CENTRO DE SP] • [15% OFF NO PIX] • [RETIRADA GRÁTIS]</span>
-                <span>[RASTREIO] • [ATENDIMENTO CONSULTIVO WHATSAPP]</span>
-            </div>
-
-            <!-- Header Principal -->
-            <div class="header-row">
-                <div class="block-wire" style="height: 60px;">
-                    <span class="ux-note">IDENTIDADE</span>
-                    [LOGO: GAME MANIA]
+        <!-- 1. RAFE DESKTOP -->
+        <div id="rafeDesktop" class="rafe-view active">
+            <!-- Bloco 1: Topbar de Vantagens -->
+            <div class="rafe-block">
+                <div class="rafe-block-label">
+                    <span>1. Topbar Corporativa / Avisos Globais (RF01, RF02, RF04)</span>
+                    <span class="rafe-block-spec">Altura: 32px | Grid: Flex Justify-Between</span>
                 </div>
-                <div class="block-wire dashed" style="height: 60px;">
-                    <span class="ux-note">PADRÃO F: FOCO PRIMÁRIO</span>
-                    [CAMPO DE BUSCA PREDITIVA COM AUTOCOMPLETE (3 CARACTERES)]
-                </div>
-                <div class="block-wire" style="height: 60px;">
-                    <span class="ux-note">AÇÕES RÁPIDAS</span>
-                    [MINHA CONTA] • [FAVORITOS] • [CARRINHO (BADGE 2 / 15 MIN)]
+                <div class="rafe-inner-wire">
+                    [📍 Endereço Loja Física SP] • [⚡ 15% OFF Pix à Vista] • [🪙 Saldo 350 Game Points (R$ 17,50)] • [📦 Rastreio] • [💬 Atendimento]
                 </div>
             </div>
 
-            <!-- Navegação Horizontal por Departamentos -->
-            <div class="block-wire" style="height: 44px; justify-content: space-around;">
-                <span class="ux-note">ARQUITETURA DA INFORMAÇÃO</span>
-                <span>[HARDWARE]</span>
-                <span>[PLACAS DE VÍDEO]</span>
-                <span>[PROCESSADORES]</span>
-                <span>[PERIFÉRICOS]</span>
-                <span>[MONTE SEU PC]</span>
-                <span>[CONSOLES]</span>
-                <span style="color: var(--siemens-accent);">[OFERTAS 15% PIX]</span>
+            <!-- Bloco 2: Header Principal -->
+            <div class="rafe-block">
+                <div class="rafe-block-label">
+                    <span>2. Header Executivo Principal (RF03, RF05, RF06)</span>
+                    <span class="rafe-block-spec">Altura: 72px | Sticky Navbar</span>
+                </div>
+                <div class="desktop-header-grid">
+                    <div class="rafe-inner-wire">[🎮 LOGOTIPO GAME MANIA]</div>
+                    <div class="rafe-inner-wire">[🔍 Campo de Busca Preditiva com Dropdown Sugestões (580px)]</div>
+                    <div class="rafe-inner-wire">[🪙 Clube Pontos] | [👤 Minha Conta] | [🛒 Carrinho (2)]</div>
+                </div>
             </div>
 
-            <!-- Hero Banner Duplo -->
-            <div class="hero-row">
-                <div class="block-wire dashed" style="flex-direction: column; align-items: flex-start; text-align: left; padding: 24px;">
-                    <span class="ux-note">PROPOSTA DE VALOR</span>
-                    <div style="font-size: 16px; margin-bottom: 8px;">[TÍTULO H1: DO CENTRO DE SP PARA TODO O BRASIL]</div>
-                    <div style="color: var(--siemens-text-muted); font-size: 12px; margin-bottom: 16px;">[SUBTÍTULO: Expansão Nacional • Consultoria Gamer • 15% OFF no Pix • Até 12x Sem Juros]</div>
-                    <div style="display: flex; gap: 10px;">
-                        <span class="ux-tag">[CTA PRIMÁRIO: EXPLORAR HARDWARE]</span>
-                        <span class="ux-tag">[CTA SECUNDÁRIO: VER JOGOS EM AÇÃO]</span>
+            <!-- Bloco 3: Barra de Navegação Departamental -->
+            <div class="rafe-block">
+                <div class="rafe-block-label">
+                    <span>3. Categorias Departamentais (Taxonomia Gamer)</span>
+                    <span class="rafe-block-spec">Altura: 44px | 6 Departamentos</span>
+                </div>
+                <div class="rafe-inner-wire">
+                    [🔥 Todos] • [💻 Hardware & GPUs] • [⌨️ Periféricos] • [🖥️ Monitores 144Hz+] • [🎮 Consoles] • [🪑 Cadeiras Gamer]
+                </div>
+            </div>
+
+            <!-- Bloco 4: Hero Banner & Vídeo Consultivo -->
+            <div class="rafe-block">
+                <div class="rafe-block-label">
+                    <span>4. Hero Banner Promocional & Vídeo Review (RF05, RF26)</span>
+                    <span class="rafe-block-spec">Altura: 260px | Split 2 Colunas</span>
+                </div>
+                <div class="desktop-hero-grid">
+                    <div class="rafe-inner-wire" style="flex-direction: column; text-align: left; align-items: flex-start; padding: 20px;">
+                        <span style="color: var(--siemens-cyan); font-weight: 800; font-size: 13px;">[🏷️ LANÇAMENTO: SETUP RTX 4070 OC EDITION]</span>
+                        <h2 style="font-size: 20px; margin: 8px 0; color: #FFF;">Chamada Principal com Proposta de Valor e 15% OFF Pix</h2>
+                        <div style="background: var(--siemens-teal); color: #FFF; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 11px;">[BOTÃO CTA: APROVEITAR OFERTA ➔]</div>
+                    </div>
+                    <div class="rafe-inner-wire" style="flex-direction: column;">
+                        <span>▶️ [VÍDEO REVIEW EMBUTIDO]</span>
+                        <span style="font-size: 10px; color: var(--siemens-note); margin-top: 4px;">Player HTML5 16:9 sem reload</span>
                     </div>
                 </div>
-                <div class="block-wire" style="flex-direction: column; justify-content: space-between; padding: 20px;">
-                    <span class="ux-note">DESTAQUE CONVERSÃO</span>
-                    <div style="color: var(--siemens-cyan);">[CARD PRODUTO EM FOCO]</div>
-                    <div>[PC GAMER CHALLENGER RYZEN 7 + RTX 4060]</div>
-                    <div style="font-size: 16px; color: var(--siemens-accent);">[R$ 4.799 NO PIX (-15%)]</div>
-                    <div style="font-size: 11px; color: var(--siemens-text-muted);">[OU 12X (SUPORTA 2 CARTÕES)]</div>
-                    <div class="ux-tag" style="width: 100%;">[BOTÃO: RESERVAR NO CARRINHO (15 MIN)]</div>
+            </div>
+
+            <!-- Bloco 5: Faixa de Vantagens e Confiança -->
+            <div class="rafe-block">
+                <div class="rafe-block-label">
+                    <span>5. Trust Badges / Vantagens Institucionais (RF02, RF04)</span>
+                    <span class="rafe-block-spec">Grid: 4 Colunas Equidistantes</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    <div class="rafe-inner-wire">[⚡ 15% OFF Pix à Vista]</div>
+                    <div class="rafe-inner-wire">[💳 Até 12x Sem Juros / 2 Cartões]</div>
+                    <div class="rafe-inner-wire">[🚚 Frete Grátis e Retirada SP]</div>
+                    <div class="rafe-inner-wire">[🪙 Game Points Acumulativos]</div>
                 </div>
             </div>
 
-            <!-- Seção de Shorts & Gameplay Benchmarks (RF26) -->
-            <div class="block-wire" style="margin-bottom: 8px; justify-content: flex-start;">
-                <span class="ux-note">RF26: PROVA VISUAL DE DESEMPENHO</span>
-                <span>▶ [SEÇÃO: GAMEPLAY BENCHMARKS & SOUND TESTS EM VÍDEOS CURTOS]</span>
-            </div>
-            <div class="shorts-row">
-                <div class="block-wire dashed" style="flex-direction: column;">
-                    <span class="ux-note">FPS OVERLAY</span>
-                    <div>[VÍDEO 1: RTX 4060 NO CYBERPUNK]</div>
-                    <div style="font-size: 10px; color: var(--siemens-accent);">[TELEMETRIA: 88 FPS • 1080P ULTRA]</div>
+            <!-- Bloco 6: Vitrine de Produtos (Grid 4 Colunas) -->
+            <div class="rafe-block">
+                <div class="rafe-block-label">
+                    <span>6. Vitrine de Produtos com Selos e Preço Duplo (RF01, RF02, RF04)</span>
+                    <span class="rafe-block-spec">Grid: 4 Colunas | Card com Reserva Cronometrada</span>
                 </div>
-                <div class="block-wire dashed" style="flex-direction: column;">
-                    <span class="ux-note">SOUND TEST</span>
-                    <div>[VÍDEO 2: TECLADO MECÂNICO SWITCH RED]</div>
-                    <div style="font-size: 10px; color: var(--siemens-cyan);">[ACÚSTICA TÁTIL E CURVA DE PRESSÃO]</div>
-                </div>
-                <div class="block-wire dashed" style="flex-direction: column;">
-                    <span class="ux-note">FLUIDEZ 165HZ</span>
-                    <div>[VÍDEO 3: MONITOR 165HZ VS 60HZ]</div>
-                    <div style="font-size: 10px; color: var(--siemens-accent);">[RASTREIO DE MOVIMENTO SEM GHOSTING]</div>
-                </div>
-            </div>
-
-            <!-- Catálogo em 4 Colunas (Grid Padrão Desktop) -->
-            <div class="block-wire" style="margin-bottom: 8px; justify-content: flex-start;">
-                <span class="ux-note">CATÁLOGO PRINCIPAL</span>
-                <span>🛒 [GRID DE PRODUTOS EM DESTAQUE - 4 COLUNAS PADRONIZADAS]</span>
-            </div>
-            <div class="catalog-row-desktop">
-                <div class="block-wire" style="flex-direction: column; gap: 6px;">
-                    <span class="ux-note">CARD 1</span>
-                    <div>[FOTO: RTX 4060]</div>
-                    <div>[NOME DO PRODUTO]</div>
-                    <div style="color: var(--siemens-accent);">[R$ 1.999 NO PIX]</div>
-                    <div style="font-size: 10px;">[OU 12X R$ 195,98]</div>
-                    <div class="ux-tag">[ADICIONAR]</div>
-                </div>
-                <div class="block-wire" style="flex-direction: column; gap: 6px;">
-                    <span class="ux-note">CARD 2</span>
-                    <div>[FOTO: RYZEN 7]</div>
-                    <div>[NOME DO PRODUTO]</div>
-                    <div style="color: var(--siemens-accent);">[R$ 1.349 NO PIX]</div>
-                    <div style="font-size: 10px;">[OU 12X R$ 132,25]</div>
-                    <div class="ux-tag">[ADICIONAR]</div>
-                </div>
-                <div class="block-wire" style="flex-direction: column; gap: 6px;">
-                    <span class="ux-note">CARD 3</span>
-                    <div>[FOTO: TECLADO]</div>
-                    <div>[NOME DO PRODUTO]</div>
-                    <div style="color: var(--siemens-accent);">[R$ 289 NO PIX]</div>
-                    <div style="font-size: 10px;">[OU 6X R$ 56,66]</div>
-                    <div class="ux-tag">[ADICIONAR]</div>
-                </div>
-                <div class="block-wire" style="flex-direction: column; gap: 6px;">
-                    <span class="ux-note">CARD 4</span>
-                    <div>[FOTO: MONITOR]</div>
-                    <div>[NOME DO PRODUTO]</div>
-                    <div style="color: var(--siemens-accent);">[R$ 849 NO PIX]</div>
-                    <div style="font-size: 10px;">[OU 10X R$ 99,88]</div>
-                    <div class="ux-tag">[ADICIONAR]</div>
+                <div class="desktop-catalog-grid">
+                    <div class="rafe-inner-wire" style="flex-direction: column; min-height: 160px; justify-content: space-between;">
+                        <span style="color: var(--siemens-accent)">[SELO DESTAQUE]</span>
+                        <span>[IMAGEM PRODUTO 1: MONITOR]</span>
+                        <span>Preço Cartão vs Pix (-15%)</span>
+                        <span style="color: var(--siemens-note)">[🪙 +1.299 Pts]</span>
+                        <div style="background: var(--siemens-card-bg); width: 100%; text-align: center; padding: 4px; border: 1px solid var(--siemens-border);">[+ Carrinho]</div>
+                    </div>
+                    <div class="rafe-inner-wire" style="flex-direction: column; min-height: 160px; justify-content: space-between;">
+                        <span style="color: var(--siemens-cyan)">[SELO MAIS VENDIDO]</span>
+                        <span>[IMAGEM PRODUTO 2: TECLADO]</span>
+                        <span>Preço Cartão vs Pix (-15%)</span>
+                        <span style="color: var(--siemens-note)">[🪙 +389 Pts]</span>
+                        <div style="background: var(--siemens-card-bg); width: 100%; text-align: center; padding: 4px; border: 1px solid var(--siemens-border);">[+ Carrinho]</div>
+                    </div>
+                    <div class="rafe-inner-wire" style="flex-direction: column; min-height: 160px; justify-content: space-between;">
+                        <span style="color: var(--siemens-note)">[SELO PROMOÇÃO]</span>
+                        <span>[IMAGEM PRODUTO 3: MOUSE]</span>
+                        <span>Preço Cartão vs Pix (-15%)</span>
+                        <span style="color: var(--siemens-note)">[🪙 +219 Pts]</span>
+                        <div style="background: var(--siemens-card-bg); width: 100%; text-align: center; padding: 4px; border: 1px solid var(--siemens-border);">[+ Carrinho]</div>
+                    </div>
+                    <div class="rafe-inner-wire" style="flex-direction: column; min-height: 160px; justify-content: space-between;">
+                        <span style="color: var(--siemens-accent)">[SELO HIGH-END]</span>
+                        <span>[IMAGEM PRODUTO 4: RTX 4070]</span>
+                        <span>Preço Cartão vs Pix (-15%)</span>
+                        <span style="color: var(--siemens-note)">[🪙 +4.199 Pts]</span>
+                        <div style="background: var(--siemens-card-bg); width: 100%; text-align: center; padding: 4px; border: 1px solid var(--siemens-border);">[+ Carrinho]</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Módulo FAQ Comunitário (RF23) -->
-            <div class="block-wire dashed" style="height: 70px; flex-direction: column;">
-                <span class="ux-note">RF23: FAQ DINÂMICO</span>
-                <div>[MÓDULO DE DÚVIDAS E PERGUNTAS PÚBLICAS RESPONDIDAS PELA EQUIPE GAME MANIA]</div>
-                <div style="font-size: 11px; color: var(--siemens-text-muted);">[Dúvidas de compatibilidade de placa-mãe, retirada no centro de SP e parcelamento em 2 cartões]</div>
-            </div>
-
-            <!-- Rodapé 4 Colunas -->
-            <div class="footer-row-desktop">
-                <div class="block-wire" style="flex-direction: column; align-items: flex-start; text-align: left;">
-                    <span class="ux-note">COLUNA 1</span>
-                    <div>[SOBRE A GAME MANIA]</div>
-                    <div style="font-size: 10px; color: var(--siemens-text-muted);">Loja física no centro de SP com expansão nacional.</div>
+            <!-- Bloco 7: Mini-Cart Lateral e Rodapé -->
+            <div class="rafe-block">
+                <div class="rafe-block-label">
+                    <span>7. Drawer Lateral do Carrinho & Rodapé Institucional (RF06, RF07)</span>
+                    <span class="rafe-block-spec">Gaveta Flutuante 400px + Footer 4 Colunas</span>
                 </div>
-                <div class="block-wire" style="flex-direction: column; align-items: flex-start; text-align: left;">
-                    <span class="ux-note">COLUNA 2</span>
-                    <div>[DEPARTAMENTOS]</div>
-                    <div style="font-size: 10px; color: var(--siemens-text-muted);">Hardware, Periféricos, Monte seu PC, Consoles.</div>
-                </div>
-                <div class="block-wire" style="flex-direction: column; align-items: flex-start; text-align: left;">
-                    <span class="ux-note">COLUNA 3</span>
-                    <div>[PAGAMENTO & DESCONTOS]</div>
-                    <div style="font-size: 10px; color: var(--siemens-accent);">15% OFF no Pix • 12x Sem Juros • 2 Cartões.</div>
-                </div>
-                <div class="block-wire" style="flex-direction: column; align-items: flex-start; text-align: left;">
-                    <span class="ux-note">COLUNA 4</span>
-                    <div>[SEGURANÇA & RMA]</div>
-                    <div style="font-size: 10px; color: var(--siemens-text-muted);">Garantia Legal, Módulo de Trocas, SSL e LGPD.</div>
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
+                    <div class="rafe-inner-wire">
+                        [RODAPÉ: Sobre Game Mania • Políticas • Formas de Pagamento • Direitos Autorais]
+                    </div>
+                    <div class="rafe-inner-wire" style="border-color: var(--siemens-teal); color: var(--siemens-cyan);">
+                        [MINI-CART: Lista Itens + Cronômetro 15min + Subtotal Pix + Botão Finalizar]
+                    </div>
                 </div>
             </div>
-
         </div>
-    </div>
 
-    <!-- ========================================== -->
-    <!-- 2. RAFE TABLET (768px) -->
-    <!-- ========================================== -->
-    <div id="tab-tablet" class="rafe-view">
-        <div class="wireframe-canvas tablet-frame">
-            
-            <div class="block-wire" style="height: 32px; font-size: 10px;">
-                <span class="ux-note">TABLET TOPBAR</span>
-                [📍 LOJA CENTRO SP] • [⚡ 15% OFF NO PIX] • [🚚 FRETE NACIONAL]
-            </div>
+        <!-- 2. RAFE TABLET -->
+        <div id="rafeTablet" class="rafe-view">
+            <div class="tablet-mockup">
+                <div class="rafe-block">
+                    <div class="rafe-block-label">
+                        <span>1. Header Adaptado para Tablet (768px)</span>
+                        <span class="rafe-block-spec">Viewport 768px | Grid Condensado</span>
+                    </div>
+                    <div class="tablet-header-grid">
+                        <div class="rafe-inner-wire">[🎮 GAME MANIA]</div>
+                        <div class="rafe-inner-wire">[🔍 Busca Integrada]</div>
+                        <div class="rafe-inner-wire">[🪙 350] [🛒 (2)]</div>
+                    </div>
+                </div>
 
-            <!-- Header Tablet (Busca Adaptada) -->
-            <div class="header-row" style="grid-template-columns: 2fr 5fr 2.5fr;">
-                <div class="block-wire" style="height: 50px;">
-                    <span class="ux-note">LOGO</span>
-                    [GAME MANIA]
+                <div class="rafe-block">
+                    <div class="rafe-block-label">
+                        <span>2. Categorias com Scroll Horizontal Suave</span>
+                        <span class="rafe-block-spec">Carrossel Touch</span>
+                    </div>
+                    <div class="rafe-inner-wire">
+                        [🔥 Todos] ➔ [💻 GPUs] ➔ [⌨️ Periféricos] ➔ [🖥️ Monitores] ➔ [🎮 Consoles]
+                    </div>
                 </div>
-                <div class="block-wire dashed" style="height: 50px;">
-                    <span class="ux-note">BUSCA CONDENSADA</span>
-                    [CAMPO DE BUSCA COMPACTO]
-                </div>
-                <div class="block-wire" style="height: 50px;">
-                    <span class="ux-note">AÇÕES</span>
-                    [CONTA] • [CARRINHO (2)]
-                </div>
-            </div>
 
-            <!-- Navegação em Carrossel Horizontal Tablet -->
-            <div class="block-wire" style="height: 40px; justify-content: space-between; overflow-x: auto; font-size: 11px;">
-                <span class="ux-note">HORIZONTAL SCROLL</span>
-                <span>[HARDWARE]</span>
-                <span>[PROCESSADORES]</span>
-                <span>[PERIFÉRICOS]</span>
-                <span>[MONTE PC]</span>
-                <span style="color: var(--siemens-accent);">[OFERTAS PIX]</span>
-            </div>
-
-            <!-- Hero Banner Compacto Tablet -->
-            <div class="block-wire dashed" style="flex-direction: column; padding: 18px; text-align: left; min-height: 140px;">
-                <span class="ux-note">HERO CONDENSADO (8 COLUNAS)</span>
-                <div style="font-size: 15px; font-weight: 800;">[H1: DO CENTRO DE SP PARA TODO O BRASIL]</div>
-                <div style="font-size: 11px; color: var(--siemens-text-muted); margin: 6px 0 12px;">[Hardware com consultoria técnica • 15% OFF no Pix ou 12x em até 2 cartões]</div>
-                <div style="display: flex; gap: 8px;">
-                    <span class="ux-tag">[VER OFERTAS PIX]</span>
-                    <span class="ux-tag">[RESERVA NO CARRINHO (15 MIN)]</span>
+                <div class="rafe-block">
+                    <div class="rafe-block-label">
+                        <span>3. Vitrine Reorganizada em 3 Colunas</span>
+                        <span class="rafe-block-spec">Grid: 3 Colunas Fluidas</span>
+                    </div>
+                    <div class="tablet-catalog-grid">
+                        <div class="rafe-inner-wire" style="min-height: 130px; flex-direction: column;">
+                            <span>[ITEM 1: MONITOR]</span>
+                            <span style="color: var(--siemens-accent)">R$ 1.299 no Pix</span>
+                        </div>
+                        <div class="rafe-inner-wire" style="min-height: 130px; flex-direction: column;">
+                            <span>[ITEM 2: TECLADO]</span>
+                            <span style="color: var(--siemens-accent)">R$ 389 no Pix</span>
+                        </div>
+                        <div class="rafe-inner-wire" style="min-height: 130px; flex-direction: column;">
+                            <span>[ITEM 3: MOUSE]</span>
+                            <span style="color: var(--siemens-accent)">R$ 219 no Pix</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Shorts Tablet (Rolagem Horizontal Tátil) -->
-            <div class="block-wire" style="margin-bottom: 6px; justify-content: flex-start; font-size: 11px;">
-                <span class="ux-note">RF26: SHORTS TABLET</span>
-                <span>▶ [VÍDEOS DE BENCHMARK & SOUND TEST - ROLAGEM TOUCH]</span>
-            </div>
-            <div class="shorts-row">
-                <div class="block-wire dashed" style="min-height: 100px; font-size: 10px;">[SHORT 1: RTX 4060 88 FPS]</div>
-                <div class="block-wire dashed" style="min-height: 100px; font-size: 10px;">[SHORT 2: SOUND TEST TECLADO]</div>
-                <div class="block-wire dashed" style="min-height: 100px; font-size: 10px;">[SHORT 3: MONITOR 165HZ FLUIDEZ]</div>
-            </div>
-
-            <!-- Catálogo em 3 Colunas no Tablet -->
-            <div class="block-wire" style="margin-bottom: 6px; justify-content: flex-start; font-size: 11px;">
-                <span class="ux-note">CATÁLOGO (3 COLUNAS)</span>
-                <span>🛒 [PRODUTOS EM DESTAQUE REORGANIZADOS PARA TABLET]</span>
-            </div>
-            <div class="catalog-row-tablet">
-                <div class="block-wire" style="flex-direction: column; gap: 4px; padding: 10px;">
-                    <div>[RTX 4060 8GB]</div>
-                    <div style="color: var(--siemens-accent); font-size: 11px;">[R$ 1.999 PIX]</div>
-                    <div class="ux-tag">[ADICIONAR]</div>
-                </div>
-                <div class="block-wire" style="flex-direction: column; gap: 4px; padding: 10px;">
-                    <div>[RYZEN 7 5700X3D]</div>
-                    <div style="color: var(--siemens-accent); font-size: 11px;">[R$ 1.349 PIX]</div>
-                    <div class="ux-tag">[ADICIONAR]</div>
-                </div>
-                <div class="block-wire" style="flex-direction: column; gap: 4px; padding: 10px;">
-                    <div>[TECLADO RGB RED]</div>
-                    <div style="color: var(--siemens-accent); font-size: 11px;">[R$ 289 PIX]</div>
-                    <div class="ux-tag">[ADICIONAR]</div>
+                <div class="rafe-block">
+                    <div class="rafe-block-label">
+                        <span>4. Checkout Bottom Sheet Adaptativo</span>
+                        <span class="rafe-block-spec">Modal Centralizado</span>
+                    </div>
+                    <div class="rafe-inner-wire">
+                        [Gaveta de Pagamento desliza do rodapé ocupando 80% da tela com suporte tátil]
+                    </div>
                 </div>
             </div>
-
-            <!-- Rodapé 2x2 Tablet -->
-            <div class="block-wire" style="font-size: 10px; justify-content: space-around;">
-                <span>[GAME MANIA CENTRO SP]</span>
-                <span>[PAGAMENTO 15% PIX / 2 CARTÕES]</span>
-                <span>[SUPORTE & RMA]</span>
-            </div>
-
         </div>
-    </div>
 
-    <!-- ========================================== -->
-    <!-- 3. RAFE CELULAR (390px - MOBILE FIRST) -->
-    <!-- ========================================== -->
-    <div id="tab-mobile" class="rafe-view">
-        <div class="wireframe-canvas mobile-frame">
-            
-            <div class="mobile-notch"></div>
-
-            <!-- Status Bar Mobile -->
-            <div class="block-wire" style="height: 24px; padding: 0 8px; font-size: 9px; justify-content: space-between; margin-bottom: 8px;">
-                <span>09:41</span>
-                <span>[5G • 100%]</span>
-            </div>
-
-            <!-- Header Mobile com Hambúrguer -->
-            <div class="block-wire" style="height: 44px; justify-content: space-between; padding: 0 10px; margin-bottom: 8px;">
-                <span class="ux-note">HAMBÚRGUER + LOGO</span>
-                <span>[☰ DRAWER]</span>
-                <span style="font-weight: 800;">[GAME MANIA]</span>
-                <span>[🛒 (2)]</span>
-            </div>
-
-            <!-- Busca Mobile Integrada -->
-            <div class="block-wire dashed" style="height: 38px; margin-bottom: 10px;">
-                <span class="ux-note">TOUCH SEARCH</span>
-                <span>🔍 [BUSCAR PLACAS, PROCESSADORES...]</span>
-            </div>
-
-            <!-- Stories de Categorias em Círculos -->
-            <div class="block-wire" style="height: 50px; justify-content: space-between; font-size: 9px; padding: 0 6px; margin-bottom: 10px;">
-                <span class="ux-note">STORIES TOUCH</span>
-                <span>(📟 Placas)</span>
-                <span>(🧠 CPUs)</span>
-                <span>(⌨️ Teclados)</span>
-                <span>(🖥️ Telas)</span>
-                <span>(⚙️ Montar)</span>
-            </div>
-
-            <!-- Banner Hero Mobile (Layout Linear) -->
-            <div class="block-wire dashed" style="flex-direction: column; padding: 12px; text-align: left; margin-bottom: 10px;">
-                <span class="ux-note">HERO MOBILE</span>
-                <div style="font-size: 12px; font-weight: 800;">[DO CENTRO DE SP PARA TODO O BRASIL]</div>
-                <div style="font-size: 9.5px; color: var(--siemens-text-muted); margin: 4px 0;">[15% OFF no Pix • Frete Expresso e Retirada Grátis]</div>
-                <div class="ux-tag" style="width: 100%; text-align: center; margin-left: 0;">[VER OFERTAS PIX]</div>
-            </div>
-
-            <!-- Faixa de Reserva de Estoque Ativa (RF06/RF07) -->
-            <div class="block-wire" style="height: 32px; font-size: 9.5px; justify-content: space-between; border-color: var(--siemens-note); margin-bottom: 10px;">
-                <span class="ux-note">RF06/07</span>
-                <span>⏱️ [ESTOQUE RESERVADO NO CARRINHO:]</span>
-                <span style="color: var(--siemens-note); font-weight: 800;">[14:42 MIN]</span>
-            </div>
-
-            <!-- Shorts Verticais 9:16 (RF26) -->
-            <div class="block-wire" style="margin-bottom: 6px; justify-content: flex-start; font-size: 10px;">
-                <span class="ux-note">RF26: SHORTS 9:16</span>
-                <span>▶ [JOGOS EM AÇÃO (ROLAGEM LATERAL)]</span>
-            </div>
-            <div style="display: flex; gap: 6px; overflow-x: auto; margin-bottom: 10px;">
-                <div class="block-wire dashed" style="min-width: 110px; height: 140px; font-size: 9px; flex-direction: column; justify-content: flex-end; padding: 6px; margin-bottom: 0;">
-                    <div>[RTX 4060]</div>
-                    <div style="color: var(--siemens-accent);">[88 FPS ULTRA]</div>
+        <!-- 3. RAFE CELULAR -->
+        <div id="rafeMobile" class="rafe-view">
+            <div class="mobile-mockup">
+                <!-- Status Bar -->
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: #64748b; margin-bottom: 8px;">
+                    <span>09:41</span>
+                    <span>5G • 100%</span>
                 </div>
-                <div class="block-wire dashed" style="min-width: 110px; height: 140px; font-size: 9px; flex-direction: column; justify-content: flex-end; padding: 6px; margin-bottom: 0;">
-                    <div>[SOUND TEST]</div>
-                    <div style="color: var(--siemens-cyan);">[SWITCH RED]</div>
+
+                <!-- Header Mobile -->
+                <div class="rafe-block" style="padding: 6px;">
+                    <div class="mobile-header-grid">
+                        <span style="font-size: 16px;">☰</span>
+                        <span style="font-weight: 800; color: var(--siemens-cyan); font-size: 13px;">GAMEMANIA</span>
+                        <span>🪙 350 | 🛒 (2)</span>
+                    </div>
                 </div>
-                <div class="block-wire dashed" style="min-width: 110px; height: 140px; font-size: 9px; flex-direction: column; justify-content: flex-end; padding: 6px; margin-bottom: 0;">
-                    <div>[MONITOR]</div>
-                    <div style="color: var(--siemens-accent);">[165HZ FLUIDO]</div>
+
+                <!-- Busca Dedicada -->
+                <div class="rafe-block" style="padding: 6px;">
+                    <div class="rafe-inner-wire" style="min-height: 28px; font-size: 10px;">
+                        🔍 Buscar produtos, marcas e GPUs...
+                    </div>
+                </div>
+
+                <!-- Stories Redondos -->
+                <div class="rafe-block" style="padding: 6px;">
+                    <div style="display: flex; justify-content: space-around;">
+                        <span style="font-size: 10px; text-align: center;">⭕ Placas</span>
+                        <span style="font-size: 10px; text-align: center;">⭕ CPUs</span>
+                        <span style="font-size: 10px; text-align: center;">⭕ Teclas</span>
+                        <span style="font-size: 10px; text-align: center;">⭕ Telas</span>
+                    </div>
+                </div>
+
+                <!-- Banner Mobile -->
+                <div class="rafe-block" style="padding: 8px; background: rgba(0, 163, 224, 0.1);">
+                    <div style="font-size: 10px; font-weight: 800; color: var(--siemens-cyan);">⚡ OFERTA RELÂMPAGO</div>
+                    <div style="font-size: 12px; font-weight: 700;">Setup RTX 4060 com 15% Pix</div>
+                    <div style="font-size: 9px; color: var(--siemens-accent);">⏳ 14:38 restantes</div>
+                </div>
+
+                <!-- Vitrine 2 Colunas -->
+                <div class="mobile-catalog-grid">
+                    <div class="rafe-inner-wire" style="flex-direction: column; padding: 6px; font-size: 9px;">
+                        <span>[RTX 4060]</span>
+                        <span style="color: var(--siemens-accent); font-weight: bold;">R$ 1.999</span>
+                        <span style="background: var(--siemens-teal); color: white; padding: 2px 4px; border-radius: 4px; margin-top: 4px;">+ Carrinho</span>
+                    </div>
+                    <div class="rafe-inner-wire" style="flex-direction: column; padding: 6px; font-size: 9px;">
+                        <span>[TECLADO]</span>
+                        <span style="color: var(--siemens-accent); font-weight: bold;">R$ 389</span>
+                        <span style="background: var(--siemens-teal); color: white; padding: 2px 4px; border-radius: 4px; margin-top: 4px;">+ Carrinho</span>
+                    </div>
+                </div>
+
+                <!-- Bottom Navigation Fixa -->
+                <div style="margin-top: 14px; background: var(--siemens-navy); border-radius: 12px; padding: 8px; display: flex; justify-content: space-around; font-size: 10px; border: 1px solid var(--siemens-border);">
+                    <span>🏠 Início</span>
+                    <span>🔍 Buscar</span>
+                    <span>🎮 Catálogo</span>
+                    <span style="color: var(--siemens-cyan); font-weight: bold;">🛒 Cart (2)</span>
+                    <span>👤 Perfil</span>
                 </div>
             </div>
-
-            <!-- Catálogo em 2 Colunas Mobile -->
-            <div class="block-wire" style="margin-bottom: 6px; justify-content: flex-start; font-size: 10px;">
-                <span class="ux-note">GRID MOBILE (2 COLUNAS)</span>
-                <span>🛒 [OFERTAS MAIS VENDIDAS]</span>
-            </div>
-            <div class="catalog-row-mobile">
-                <div class="block-wire" style="flex-direction: column; font-size: 9px; padding: 8px;">
-                    <div>[FOTO: RTX 4060]</div>
-                    <div>[RTX 4060 8GB]</div>
-                    <div style="color: var(--siemens-accent); font-weight: 800;">[R$ 1.999 PIX]</div>
-                    <div class="ux-tag" style="margin-left: 0; width: 100%; font-size: 8px;">[+ ADICIONAR]</div>
-                </div>
-                <div class="block-wire" style="flex-direction: column; font-size: 9px; padding: 8px;">
-                    <div>[FOTO: RYZEN 7]</div>
-                    <div>[RYZEN 7 5700X3D]</div>
-                    <div style="color: var(--siemens-accent); font-weight: 800;">[R$ 1.349 PIX]</div>
-                    <div class="ux-tag" style="margin-left: 0; width: 100%; font-size: 8px;">[+ ADICIONAR]</div>
-                </div>
-            </div>
-
-            <!-- Bottom Navigation Bar Fixa (Padrão Ouro UX Mobile) -->
-            <div class="bottom-nav-wire">
-                <span class="ux-note" style="top: -8px;">THUMB ZONE (ÁREA DO POLEGAR)</span>
-                <span>[🏠 INÍCIO]</span>
-                <span>[🔍 BUSCA]</span>
-                <span>[🎮 CATÁLOGO]</span>
-                <span style="color: var(--siemens-cyan); font-weight: 800;">[🛒 CARRINHO (2)]</span>
-                <span>[👤 PERFIL]</span>
-            </div>
-
         </div>
-    </div>
 
-    <!-- ========================================== -->
-    <!-- 4. MATRIZ DE DECISÕES DE UX/UI -->
-    <!-- ========================================== -->
-    <div id="tab-decisions" class="rafe-view">
-        <div class="wireframe-canvas">
-            <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--siemens-cyan);">
-                Matriz de Adaptação de Layout e Decisões de UX/UI
-            </h3>
-            <p style="font-size: 12px; color: var(--siemens-text-muted); margin-bottom: 16px;">
-                Justificativas ergonômicas e arquiteturais para as transformações estruturais entre Desktop, Tablet e Mobile:
-            </p>
+        <!-- 4. MATRIZ DE DECISÕES DE UX/UI -->
+        <div id="rafeMatrix" class="rafe-view">
+            <h3 style="color: var(--siemens-cyan); margin-bottom: 8px; font-size: 16px;">Matriz de Adaptação de Layout e Decisões de UX/UI</h3>
+            <p style="font-size: 12px; color: var(--siemens-text-muted); margin-bottom: 12px;">Justificativas ergonômicas e arquiteturais para as transformações estruturais entre Desktop, Tablet e Mobile:</p>
 
-            <table class="decisions-table">
+            <table class="matrix-table">
                 <thead>
                     <tr>
                         <th>Componente</th>
@@ -770,24 +628,45 @@
                         <td>Faixa fixa no topo do feed e *Bottom Sheet* ao abrir o carrinho.</td>
                         <td><strong>Feedback de Estado & Urgência Justa:</strong> O usuário é informado continuamente sobre seu tempo de compra.</td>
                     </tr>
+                    <tr>
+                        <td><strong>Checkout Multicanal</strong></td>
+                        <td>Modal com 4 abas completas (Pix, 1 Cartão, 2 Cartões, Débito).</td>
+                        <td>Modal responsivo com abas redimensionadas.</td>
+                        <td>*Bottom Sheet* com toque único para Pix Copia e Cola e seleção de abas por toque.</td>
+                        <td><strong>Redução de Fricção:</strong> O Pix Copia e Cola é acionado com um toque para o app bancário.</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
+
     </div>
 
-    <!-- Rodapé Oficial de Governança -->
+    <!-- Rodapé Institucional de Governança -->
     <div class="gov-footer">
-        Documento gerado com apoio de Inteligência Artificial — Rafe Arquitetural e Estrutural Front-End (SENAI UC09 | Situação-Problema Game Mania)
+        Desenvolvido por <strong>Amador Corrêa Vicente</strong> • SENAI UC09 - Codificação para Front-End (Situação de Aprendizagem 1 - Desafio 2)<br>
+        Documento gerado com apoio de Inteligência Artificial — Arquitetura de Software e Wireframe em conformidade com as Diretrizes Corporativas Siemens
     </div>
 
-    <!-- Script de Alternância de Abas -->
+    <!-- Script de Alternância das Vistas -->
     <script>
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.rafe-view').forEach(view => view.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById('tab-' + tabId).classList.add('active');
-            btn.classList.add('active');
+        function switchRafe(viewId, btn) {
+            // Remove classe ativa de todos os botões e vistas
+            document.querySelectorAll('.rafe-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.rafe-view').forEach(v => v.classList.remove('active'));
+
+            // Ativa o botão clicado
+            if (btn) btn.classList.add('active');
+
+            // Ativa a vista correspondente
+            if (viewId === 'desktop') {
+                document.getElementById('rafeDesktop').classList.add('active');
+            } else if (viewId === 'tablet') {
+                document.getElementById('rafeTablet').classList.add('active');
+            } else if (viewId === 'mobile') {
+                document.getElementById('rafeMobile').classList.add('active');
+            } else if (viewId === 'matrix') {
+                document.getElementById('rafeMatrix').classList.add('active');
+            }
         }
     </script>
 </body>
