@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Mania | Versão Tablet & Mobile</title>
+    <title>Simulador Mobile & Tablet | E-commerce Game Mania</title>
     <style>
         :root {
             --siemens-navy: #001826;
@@ -17,799 +17,1128 @@
             --siemens-text-muted: #94A3B8;
             --siemens-green-pix: #10B981;
             --siemens-gold-points: #F59E0B;
-            --siemens-accent-red: #EF4444;
+            --siemens-surface: #0F172A;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #050C16;
+            background-color: #030712;
             color: var(--siemens-white);
-            line-height: 1.4;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            padding-bottom: 40px;
         }
 
-        /* Barra de Navegação entre Versões SENAI (Sempre Visível) */
-        .version-switcher-bar {
+        /* Barra de Controle do Simulador */
+        .simulator-bar {
+            background-color: var(--siemens-navy);
+            border: 1px solid var(--siemens-card-border);
+            border-radius: 30px;
+            padding: 8px 16px;
+            margin: 20px 0;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .sim-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--siemens-text-muted);
+            margin-right: 8px;
+        }
+
+        .sim-btn {
+            background: #07101C;
+            border: 1px solid var(--siemens-card-border);
+            color: var(--siemens-text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sim-btn.active {
+            background: var(--siemens-teal);
+            color: var(--siemens-white);
+            border-color: var(--siemens-teal);
+            box-shadow: 0 0 12px rgba(0, 130, 138, 0.4);
+        }
+
+        /* Moldura de Dispositivo Físico */
+        .device-wrapper {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            background-color: #000;
+            border-radius: 48px;
+            padding: 12px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 4px #1E293B, 0 0 0 8px #0F172A;
+        }
+
+        .device-wrapper.mobile-mode {
+            width: 390px;
+            height: 800px;
+        }
+
+        .device-wrapper.tablet-mode {
+            width: 768px;
+            height: 850px;
+            border-radius: 32px;
+            padding: 14px;
+        }
+
+        .notch {
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 24px;
+            background-color: #000;
+            border-radius: 12px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            transition: opacity 0.3s;
+        }
+
+        .tablet-mode .notch {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .notch-camera {
+            width: 10px;
+            height: 10px;
+            background-color: #082F49;
+            border-radius: 50%;
+            border: 2px solid #1E293B;
+        }
+
+        /* Tela do Smartphone/Tablet */
+        .screen-container {
             width: 100%;
-            background-color: #03080F;
-            border-bottom: 2px solid var(--siemens-card-border);
+            height: 100%;
+            background-color: var(--siemens-dark-bg);
+            border-radius: 38px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+        }
+
+        .tablet-mode .screen-container {
+            border-radius: 22px;
+        }
+
+        .screen-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .screen-container::-webkit-scrollbar-thumb {
+            background: var(--siemens-card-border);
+            border-radius: 4px;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 40px;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--siemens-white);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(11, 25, 44, 0.9);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Header Mobile */
+        .app-header {
             padding: 10px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .version-nav-links {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-        }
-
-        .btn-version {
-            background: var(--siemens-card-bg);
-            border: 1px solid var(--siemens-card-border);
-            color: var(--siemens-text-muted);
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 11px;
-            font-weight: 700;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .btn-version.active {
-            background: linear-gradient(135deg, var(--siemens-teal), var(--siemens-cyan));
-            color: white;
-            border-color: var(--siemens-cyan);
-        }
-
-        /* CONTAINER PRINCIPAL: TRAVADO RIGIDAMENTE EM 768px (PROPORÇÃO TABLET/MOBILE) */
-        .app-container {
-            width: 100%;
-            max-width: 768px;
-            background-color: var(--siemens-dark-bg);
-            border-left: 1px solid var(--siemens-card-border);
-            border-right: 1px solid var(--siemens-card-border);
-            min-height: calc(100vh - 52px);
-            padding-bottom: 80px;
-            position: relative;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
-        }
-
-        .mobile-header {
-            background-color: var(--siemens-navy);
             border-bottom: 1px solid var(--siemens-card-border);
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            background-color: var(--siemens-navy);
+            position: sticky;
+            top: 40px;
+            z-index: 90;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 34px;
-            height: 34px;
-            background: linear-gradient(135deg, var(--siemens-teal), var(--siemens-cyan));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .logo-text {
-            font-size: 18px;
-            font-weight: 900;
-            color: var(--siemens-white);
-        }
-
-        .logo-text span {
-            color: var(--siemens-cyan);
-        }
-
-        .header-actions {
+        .app-header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .btn-icon {
-            background: var(--siemens-card-bg);
-            border: 1px solid var(--siemens-card-border);
-            color: white;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--siemens-white);
+            font-size: 20px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-            cursor: pointer;
-            position: relative;
         }
 
-        .cart-badge {
+        .app-logo {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--siemens-white);
+            letter-spacing: -0.5px;
+        }
+
+        .app-logo span {
+            color: var(--siemens-cyan);
+        }
+
+        .app-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .points-badge-header {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--siemens-gold-points);
+            border: 1px solid var(--siemens-gold-points);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .cart-btn-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-bubble {
             position: absolute;
-            top: -4px;
-            right: -4px;
+            top: -6px;
+            right: -6px;
             background-color: var(--siemens-teal);
             color: white;
             font-size: 10px;
             font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 8px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .search-bar {
-            padding: 12px 18px;
+        /* Barra de Busca Mobile */
+        .mobile-search-bar {
+            padding: 10px 16px;
             background-color: var(--siemens-navy);
+        }
+
+        .mobile-search-box {
+            background-color: var(--siemens-surface);
+            border: 1px solid var(--siemens-card-border);
+            border-radius: 20px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mobile-search-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 12px;
+            outline: none;
+            width: 100%;
+        }
+
+        /* Stories / Categorias Rápidas em Carrossel Horizontal */
+        .stories-bar {
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            overflow-x: auto;
+            white-space: nowrap;
+            background-color: #07101C;
             border-bottom: 1px solid var(--siemens-card-border);
         }
 
-        .search-box {
-            display: flex;
-            background-color: var(--siemens-card-bg);
-            border: 1px solid var(--siemens-card-border);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .search-input {
-            flex: 1;
-            background: none;
-            border: none;
-            padding: 10px 16px;
-            color: white;
-            font-size: 13px;
-            outline: none;
-        }
-
-        .mobile-banner {
-            margin: 16px 18px;
-            background: linear-gradient(135deg, #001826 0%, #00334E 60%, #00646E 100%);
-            border: 1px solid var(--siemens-card-border);
-            border-radius: 14px;
-            padding: 24px 20px;
-            text-align: center;
-        }
-
-        .banner-tag {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--siemens-green-pix);
-            font-size: 11px;
-            font-weight: 800;
-            padding: 4px 12px;
-            border-radius: 12px;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-
-        .banner-title {
-            font-size: 22px;
-            font-weight: 900;
-            line-height: 1.25;
-            margin-bottom: 8px;
-        }
-
-        .banner-desc {
-            font-size: 12px;
-            color: var(--siemens-text-muted);
-            margin-bottom: 16px;
-        }
-
-        .btn-banner {
-            background: linear-gradient(135deg, var(--siemens-teal), var(--siemens-cyan));
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .categories-carousel {
-            display: flex;
-            overflow-x: auto;
-            gap: 8px;
-            padding: 8px 18px;
-            scrollbar-width: none;
-        }
-
-        .categories-carousel::-webkit-scrollbar {
+        .stories-bar::-webkit-scrollbar {
             display: none;
         }
 
-        .category-chip {
-            background-color: var(--siemens-card-bg);
-            border: 1px solid var(--siemens-card-border);
-            color: var(--siemens-white);
-            padding: 8px 16px;
-            border-radius: 16px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
             cursor: pointer;
         }
 
-        .category-chip.active {
-            background-color: var(--siemens-cyan);
-            color: var(--siemens-navy);
-            border-color: var(--siemens-cyan);
-            font-weight: 800;
+        .story-ring {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--siemens-teal), var(--siemens-cyan));
+            padding: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
         }
 
-        .section-header {
-            padding: 16px 18px 8px;
+        .story-label {
+            font-size: 10px;
+            color: var(--siemens-text-muted);
+            font-weight: 600;
+        }
+
+        /* Banner Oferta Relâmpago Mobile */
+        .m-hero {
+            margin: 12px 16px;
+            background: linear-gradient(135deg, #022c43 0%, var(--siemens-card-bg) 100%);
+            border: 1px solid var(--siemens-cyan);
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .m-hero-badge {
+            background-color: var(--siemens-cyan);
+            color: #000;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .m-hero-title {
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        .m-hero-desc {
+            font-size: 11px;
+            color: var(--siemens-text-muted);
+            margin-bottom: 12px;
+        }
+
+        .m-hero-timer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--siemens-green-pix);
+        }
+
+        /* Grid de Produtos Responsivo (1 col no cel, 2 no tablet) */
+        .m-section-title {
+            padding: 12px 16px 6px;
+            font-size: 14px;
+            font-weight: 800;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .section-title {
-            font-size: 17px;
-            font-weight: 900;
-        }
-
-        /* GRID TRAVADO: MÁXIMO 2 COLUNAS PARA NUNCA ACHATAR AS IMAGENS */
-        .products-grid {
-            padding: 0 18px;
+        .m-grid {
+            padding: 8px 16px;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            grid-template-columns: 1fr;
+            gap: 12px;
         }
 
-        .product-card {
+        .tablet-mode .m-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .m-card {
             background-color: var(--siemens-card-bg);
             border: 1px solid var(--siemens-card-border);
-            border-radius: 14px;
-            padding: 14px;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+            position: relative;
+        }
+
+        .tablet-mode .m-card {
+            flex-direction: column;
+        }
+
+        .m-card-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(0, 163, 224, 0.2);
+            color: var(--siemens-cyan);
+            border: 1px solid var(--siemens-cyan);
+            font-size: 9px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .m-card-img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            background-color: #07101C;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .tablet-mode .m-card-img {
+            width: 100%;
+            height: 140px;
+        }
+
+        .m-card-info {
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        /* ALTURA DE IMAGEM TRAVADA EM 160px: PROPORÇÃO PERFEITA */
-        .product-thumb-container {
-            width: 100%;
-            height: 160px;
-            border-radius: 10px;
-            overflow: hidden;
-            background: #050C16;
-            margin-bottom: 10px;
-            position: relative;
-        }
-
-        .product-thumb {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .product-category {
-            font-size: 10px;
-            color: var(--siemens-teal);
-            font-weight: 800;
+        .m-card-cat {
+            font-size: 9px;
             text-transform: uppercase;
-        }
-
-        .product-name {
-            font-size: 13px;
+            color: var(--siemens-text-muted);
             font-weight: 700;
-            height: 36px;
-            overflow: hidden;
-            margin: 4px 0 8px;
-            line-height: 1.35;
         }
 
-        .price-pix {
-            font-size: 17px;
+        .m-card-title {
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin: 2px 0 4px;
+        }
+
+        .m-card-pix-price {
+            font-size: 15px;
             font-weight: 900;
             color: var(--siemens-green-pix);
         }
 
-        .price-term {
-            font-size: 11px;
-            color: var(--siemens-text-muted);
+        .m-card-points {
+            font-size: 10px;
+            color: var(--siemens-gold-points);
+            font-weight: 700;
         }
 
-        .btn-buy-mobile {
-            margin-top: 10px;
+        .btn-buy-m {
             background-color: var(--siemens-teal);
-            color: white;
             border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 12px;
+            color: white;
+            font-size: 11px;
             font-weight: 800;
+            padding: 6px 10px;
+            border-radius: 6px;
             cursor: pointer;
+            margin-top: 6px;
             width: 100%;
         }
 
-        /* BARRA INFERIOR FIXADA DENTRO DO CONTAINER */
+        /* Bottom Navigation Bar Fixa */
         .bottom-nav {
-            position: fixed;
+            position: absolute;
             bottom: 0;
+            left: 0;
             width: 100%;
-            max-width: 768px;
-            height: 64px;
-            background-color: var(--siemens-navy);
+            height: 56px;
+            background-color: rgba(0, 24, 38, 0.98);
             border-top: 1px solid var(--siemens-card-border);
             display: flex;
             justify-content: space-around;
             align-items: center;
             z-index: 500;
+            border-radius: 0 0 38px 38px;
         }
 
-        .nav-btn {
-            background: none;
-            border: none;
-            color: var(--siemens-text-muted);
-            font-size: 11px;
+        .tablet-mode .bottom-nav {
+            border-radius: 0 0 22px 22px;
+        }
+
+        .nav-tab {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 2px;
+            font-size: 10px;
+            color: var(--siemens-text-muted);
             cursor: pointer;
-        }
-
-        .nav-btn.active {
-            color: var(--siemens-cyan);
-            font-weight: 700;
-        }
-
-        /* MODAIS */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 2000;
-            display: none;
-            align-items: flex-end;
-            justify-content: center;
-        }
-
-        .modal-box {
-            background-color: var(--siemens-card-bg);
-            border-top: 2px solid var(--siemens-cyan);
-            border-radius: 18px 18px 0 0;
-            width: 100%;
-            max-width: 768px;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 24px 20px 34px;
             position: relative;
         }
 
-        .modal-close-btn {
-            position: absolute;
-            top: 16px;
-            right: 18px;
-            background: none;
-            border: none;
-            color: var(--siemens-text-muted);
-            font-size: 22px;
-            cursor: pointer;
-        }
-
-        /* CARRINHO PADRONIZADO E COM MINIATURAS */
-        .cart-item-card {
-            background-color: var(--siemens-navy);
-            border: 1px solid var(--siemens-card-border);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            gap: 14px;
-            align-items: center;
-        }
-
-        .cart-item-img {
-            width: 52px;
-            height: 52px;
-            border-radius: 8px;
-            object-fit: cover;
-            flex-shrink: 0;
-            background: #050C16;
-        }
-
-        .cart-item-details {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .cart-item-title {
-            font-size: 13px;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: var(--siemens-white);
-        }
-
-        .cart-item-meta {
-            font-size: 11px;
-            color: var(--siemens-text-muted);
-            margin: 2px 0;
-        }
-
-        .cart-item-price {
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--siemens-green-pix);
-        }
-
-        .btn-cart-remove {
-            background: none;
-            border: none;
-            color: var(--siemens-accent-red);
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px;
-            flex-shrink: 0;
-        }
-
-        .pix-container {
-            text-align: center;
-            background-color: var(--siemens-navy);
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px dashed var(--siemens-green-pix);
-            margin: 14px 0;
-        }
-
-        .pix-qr-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 8px;
-            background: white;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-
-        .pix-code-input {
-            width: 100%;
-            background-color: #050C16;
-            border: 1px solid var(--siemens-card-border);
+        .nav-tab.active {
             color: var(--siemens-cyan);
+            font-weight: 700;
+        }
+
+        .nav-tab-icon {
+            font-size: 18px;
+        }
+
+        .nav-tab-badge {
+            position: absolute;
+            top: -2px;
+            right: 2px;
+            background-color: var(--siemens-green-pix);
+            color: #000;
+            font-size: 8px;
+            font-weight: 900;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Drawer Lateral Mobile */
+        .m-drawer-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 990;
+            display: none;
+        }
+
+        .m-drawer {
+            position: absolute;
+            top: 0;
+            left: -280px;
+            width: 260px;
+            height: 100%;
+            background-color: var(--siemens-navy);
+            z-index: 995;
+            transition: left 0.3s ease;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .m-drawer.open {
+            left: 0;
+        }
+
+        .m-drawer-item {
+            padding: 12px 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--siemens-card-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        /* MODAL DE CHECKOUT MOBILE EMBUTIDO */
+        .m-checkout-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 998;
+            display: none;
+            align-items: flex-end;
+        }
+
+        .m-checkout-sheet {
+            width: 100%;
+            background-color: #0b1526;
+            border-top: 2px solid var(--siemens-teal);
+            border-radius: 20px 20px 0 0;
+            padding: 16px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .m-checkout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .sim-footer-note {
+            margin-top: 14px;
             font-size: 11px;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            margin-bottom: 10px;
+            color: var(--siemens-text-muted);
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- BARRA PERMANENTE DO SENAI PARA NUNCA PERDER O CONTROLE -->
-    <header class="version-switcher-bar">
-        <div style="font-size: 12px; font-weight: 800;">
-            🎮 <span style="color: var(--siemens-cyan);">Game Mania</span> • SENAI UC09
+    <!-- Barra de Navegação Multi-Dispositivo (Avaliação SENAI) -->
+    <div style="background: linear-gradient(90deg, #090e17 0%, #1e293b 100%); border-bottom: 2px solid #00E676; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #94A3B8; position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+        <div style="color: #00E676; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+            <span>🎓 SENAI UC09 • Seleção de Layout:</span>
+            <span style="font-weight: normal; color: #FFFFFF;">Navegue entre as versões responsivas desenvolvidas</span>
         </div>
-        <div class="version-nav-links">
-            <a href="desktop.html" class="btn-version">💻 Desktop</a>
-            <a href="mobile_tablet.html" class="btn-version active">📱 Tablet & Mobile</a>
-            <a href="rafe.html" class="btn-version">📐 Rafes</a>
-            <a href="index.html" class="btn-version">🏠 Portal Geral</a>
-        </div>
-    </header>
-
-    <!-- CONTAINER PRINCIPAL CENTRALIZADO -->
-    <div class="app-container">
-
-        <!-- Topo Mobile -->
-        <div class="mobile-header">
-            <a href="javascript:void(0)" class="logo" onclick="filterCategory('todos')">
-                <div class="logo-icon">🎮</div>
-                <div class="logo-text">GAME<span>MANIA</span></div>
-            </a>
-            <div class="header-actions">
-                <div class="btn-icon" onclick="openModal('modalAccount')">👤</div>
-                <div class="btn-icon" onclick="openModal('modalCart')">
-                    🛒 <span class="cart-badge" id="cartCount">2</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Busca -->
-        <div class="search-bar">
-            <div class="search-box">
-                <input type="text" class="search-input" placeholder="🔍 Buscar placas, monitores, periféricos..." oninput="handleSearch(this.value)">
-            </div>
-        </div>
-
-        <!-- Categorias em Carrossel -->
-        <div class="categories-carousel">
-            <div class="category-chip active" id="tab-todos" onclick="filterCategory('todos')">🔥 Todos</div>
-            <div class="category-chip" id="tab-hardware" onclick="filterCategory('hardware')">⚡ Hardware</div>
-            <div class="category-chip" id="tab-perifericos" onclick="filterCategory('perifericos')">⌨️ Periféricos</div>
-            <div class="category-chip" id="tab-monitores" onclick="filterCategory('monitores')">🖥️ Monitores</div>
-            <div class="category-chip" id="tab-cadeiras" onclick="filterCategory('cadeiras')">💺 Cadeiras</div>
-        </div>
-
-        <!-- Banner Promocional -->
-        <div class="mobile-banner">
-            <span class="banner-tag">⚡ 15% OFF NO PIX</span>
-            <h2 class="banner-title">Setup Gamer de Elite</h2>
-            <p class="banner-desc">Retirada grátis em até 2 horas no Centro de SP ou envio Sedex segurado.</p>
-            <button class="btn-banner" onclick="openModal('modalPixCheckout')">Pagar via Pix Agora</button>
-        </div>
-
-        <!-- Destaques -->
-        <div class="section-header">
-            <h3 class="section-title">Destaques da Loja</h3>
-            <span style="font-size: 12px; color: var(--siemens-cyan);" id="itemCount">8 itens</span>
-        </div>
-
-        <!-- Grade 2 Colunas Perfeitas -->
-        <section class="products-grid" id="productsGrid"></section>
-
-        <!-- Barra Inferior -->
-        <nav class="bottom-nav">
-            <button class="nav-btn active" onclick="filterCategory('todos')">
-                <span style="font-size: 20px;">🏠</span>
-                <span>Início</span>
-            </button>
-            <button class="nav-btn" onclick="openModal('modalPixCheckout')">
-                <span style="font-size: 20px;">⚡</span>
-                <span>Pagar Pix</span>
-            </button>
-            <button class="nav-btn" onclick="openModal('modalCart')">
-                <span style="font-size: 20px;">🛒</span>
-                <span>Carrinho</span>
-            </button>
-            <button class="nav-btn" onclick="openModal('modalAccount')">
-                <span style="font-size: 20px;">👤</span>
-                <span>Conta</span>
-            </button>
-            <a href="https://wa.me/5511975150157?text=Ol%C3%A1%20Amador%2C%20tenho%20uma%20d%C3%BAvida%20sobre%20a%20Game%20Mania!" target="_blank" class="nav-btn" style="text-decoration: none; color: #25D366;">
-                <span style="font-size: 20px;">💬</span>
-                <span>Whats</span>
-            </a>
-        </nav>
-    </div>
-
-    <!-- Modal Pix Oficial -->
-    <div id="modalPixCheckout" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'modalPixCheckout')">
-        <div class="modal-box">
-            <button class="modal-close-btn" onclick="closeModal('modalPixCheckout')">✕</button>
-            <h3 style="font-size: 17px; font-weight: 900; color: var(--siemens-green-pix); margin-bottom: 8px;">⚡ Pagamento Imediato via Pix</h3>
-            <p style="font-size: 12px; color: var(--siemens-text-muted); margin-bottom: 14px;">Desconto de 15% aplicado automaticamente.</p>
-
-            <div class="pix-container">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=00020126360014br.gov.bcb.pix0114%2B55119612492945204000053039865802BR5916AMADOR%20C%20VICENTE6009SAO%20PAULO62070503***63042D7B" alt="QR Code Pix" class="pix-qr-img">
-                <div style="font-size: 13px; font-weight: 800;">AMADOR CORRÊA VICENTE</div>
-                <div style="font-size: 12px; color: var(--siemens-text-muted); margin-bottom: 10px;">Chave Pix: <strong>11961249294</strong></div>
-                <input type="text" id="pixCodeInputMobile" class="pix-code-input" value="00020126360014br.gov.bcb.pix0114+55119612492945204000053039865802BR5916AMADOR C VICENTE6009SAO PAULO62070503***63042D7B" readonly>
-                <button class="btn-banner" style="width: 100%; padding: 10px; font-size: 12px;" onclick="copyPixCodeMobile()">📋 Copiar Código Pix</button>
-            </div>
-
-            <a href="https://wa.me/5511975150157?text=Ol%C3%A1%20Amador%2C%20fiz%20o%20pagamento%20do%20meu%20pedido%20na%20Game%20Mania%20via%20Pix!" target="_blank" class="btn-banner" style="display: block; text-align: center; text-decoration: none; background: #25D366; margin-top: 12px;">
-                Confirmar no WhatsApp ➔
-            </a>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="index.html" style="text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8;">🖥️ Voltar ao Desktop ➔</a>
+            <a href="mobile_tablet.html" style="text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; background: #00E676; color: #000000; box-shadow: 0 2px 8px rgba(0, 230, 118, 0.3);">📱 Simulador Tablet & Mobile (Ativo)</a>
+            <a href="rafe.html" style="text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; background: #0f172a; color: #f59e0b; border: 1px solid #f59e0b;">📐 Ver Rafe / Wireframe ➔</a>
         </div>
     </div>
 
-    <!-- Modal Carrinho com Miniaturas e Detalhes Ricos -->
-    <div id="modalCart" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'modalCart')">
-        <div class="modal-box">
-            <button class="modal-close-btn" onclick="closeModal('modalCart')">✕</button>
-            <h3 style="font-size: 17px; font-weight: 900; margin-bottom: 14px;">🛒 Carrinho de Compras</h3>
+    <!-- Barra de Controle do Simulador -->
+    <div class="simulator-bar">
+        <span class="sim-title">Game Mania Viewport:</span>
+        <button id="btnMobile" class="sim-btn active" onclick="setMode('mobile')">
+            📱 Celular (390px)
+        </button>
+        <button id="btnTablet" class="sim-btn" onclick="setMode('tablet')">
+            📲 Tablet (768px)
+        </button>
+    </div>
+
+    <!-- Moldura do Dispositivo -->
+    <div id="deviceWrapper" class="device-wrapper mobile-mode">
+        <!-- Notch no Celular -->
+        <div class="notch">
+            <div class="notch-camera"></div>
+            <div style="width: 8px; height: 8px; background: #00828A; border-radius: 50%;"></div>
+        </div>
+
+        <!-- Tela do App / E-commerce -->
+        <div class="screen-container" id="screenContainer">
             
-            <div id="cartItemsMobile"></div>
+            <!-- Barra de Status do Sistema -->
+            <div class="status-bar">
+                <span>09:41</span>
+                <span>📶 5G • 🔋 100%</span>
+            </div>
 
-            <div style="border-top: 1px solid var(--siemens-card-border); padding-top: 14px; margin-top: 14px;">
-                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
-                    <span style="color: var(--siemens-text-muted);">Subtotal:</span>
-                    <span id="cartSubtotalMobile">R$ 2.388,00</span>
+            <!-- Header Mobile -->
+            <div class="app-header">
+                <div class="app-header-left">
+                    <button class="icon-btn" onclick="toggleMobileDrawer()">☰</button>
+                    <div class="app-logo">GAME<span>MANIA</span></div>
                 </div>
-                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; color: var(--siemens-green-pix);">
-                    <span>Desconto Pix (15%):</span>
-                    <span id="cartPixDiscountMobile">- R$ 358,20</span>
+                <div class="app-header-actions">
+                    <div class="points-badge-header">🪙 350 pts</div>
+                    <div class="cart-btn-wrapper" onclick="openMobileCheckout()">
+                        <span style="font-size: 18px;">🛒</span>
+                        <div class="cart-bubble" id="mobileCartCount">2</div>
+                    </div>
                 </div>
-                <div style="display: flex; justify-content: space-between; font-size: 17px; font-weight: 900; margin-bottom: 14px;">
-                    <span>Total no Pix:</span>
-                    <strong style="color: var(--siemens-green-pix);" id="cartTotalMobile">R$ 2.029,80</strong>
+            </div>
+
+            <!-- Barra de Busca Mobile -->
+            <div class="mobile-search-bar">
+                <div class="mobile-search-box">
+                    <span>🔍</span>
+                    <input type="text" placeholder="Buscar RTX 4060, Ryzen, periféricos..." onfocus="this.placeholder=''" onblur="this.placeholder='Buscar RTX 4060, Ryzen, periféricos...'">
                 </div>
-                <button class="btn-banner" style="width: 100%; border-radius: 8px;" onclick="closeModal('modalCart'); openModal('modalPixCheckout');">
-                    Finalizar Compra no Pix
-                </button>
+            </div>
+
+            <!-- Stories / Categorias Rápidas -->
+            <div class="stories-bar">
+                <div class="story-item" onclick="alert('Filtrando categoria: Placas de Vídeo')">
+                    <div class="story-ring">📟</div>
+                    <span class="story-label">Placas</span>
+                </div>
+                <div class="story-item" onclick="alert('Filtrando categoria: Processadores')">
+                    <div class="story-ring">🧠</div>
+                    <span class="story-label">CPUs</span>
+                </div>
+                <div class="story-item" onclick="alert('Filtrando categoria: Periféricos')">
+                    <div class="story-ring">⌨️</div>
+                    <span class="story-label">Teclados</span>
+                </div>
+                <div class="story-item" onclick="alert('Filtrando categoria: Monitores')">
+                    <div class="story-ring">🖥️</div>
+                    <span class="story-label">Telas</span>
+                </div>
+                <div class="story-item" onclick="alert('Filtrando categoria: Consoles')">
+                    <div class="story-ring">🎮</div>
+                    <span class="story-label">Consoles</span>
+                </div>
+            </div>
+
+            <!-- Hero Banner Compacto -->
+            <div class="m-hero">
+                <span class="m-hero-badge">⚡ Oferta Relâmpago</span>
+                <div class="m-hero-title">Setup Gamer Completo<br>com 15% OFF no Pix</div>
+                <div class="m-hero-desc">Hardware e periféricos com entrega expressa para SP.</div>
+                <div class="m-hero-timer">
+                    <span>⏳ Termina em:</span>
+                    <span id="mTimer">14:38</span>
+                </div>
+            </div>
+
+            <!-- Catálogo em Lista Otimizada para Mobile -->
+            <div class="m-section-title">
+                <span>🔥 Mais Vendidos Mobile</span>
+                <span style="font-size: 11px; color: var(--siemens-cyan); cursor: pointer;" onclick="alert('Carregando mais 8 produtos...')">Ver Todos</span>
+            </div>
+
+            <div class="m-grid">
+                <!-- Produto 1 -->
+                <div class="m-card">
+                    <span class="m-card-badge">DESTAQUE</span>
+                    <img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=300&q=80" class="m-card-img" alt="RTX 4060">
+                    <div class="m-card-info">
+                        <div>
+                            <div class="m-card-cat">Hardware</div>
+                            <div class="m-card-title">PC Gamer RTX 4060 8GB GDDR6 + Ryzen 5</div>
+                            <div class="m-card-pix-price">R$ 1.999,00 <small style="font-size: 10px; color: var(--siemens-text-muted);">no Pix</small></div>
+                            <div class="m-card-points">🪙 +1.999 Game Points</div>
+                        </div>
+                        <button class="btn-buy-m" onclick="addMobileCart('RTX 4060', 1999.00)">+ Carrinho</button>
+                    </div>
+                </div>
+
+                <!-- Produto 2 -->
+                <div class="m-card">
+                    <span class="m-card-badge">HOT</span>
+                    <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&q=80" class="m-card-img" alt="Teclado Gamer">
+                    <div class="m-card-info">
+                        <div>
+                            <div class="m-card-cat">Periféricos</div>
+                            <div class="m-card-title">Teclado Mecânico RGB Switch Red Anti-Ghosting</div>
+                            <div class="m-card-pix-price">R$ 389,00 <small style="font-size: 10px; color: var(--siemens-text-muted);">no Pix</small></div>
+                            <div class="m-card-points">🪙 +389 Game Points</div>
+                        </div>
+                        <button class="btn-buy-m" onclick="addMobileCart('Teclado Mecânico', 389.00)">+ Carrinho</button>
+                    </div>
+                </div>
+
+                <!-- Produto 3 -->
+                <div class="m-card">
+                    <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=300&q=80" class="m-card-img" alt="Monitor 165Hz">
+                    <div class="m-card-info">
+                        <div>
+                            <div class="m-card-cat">Monitores</div>
+                            <div class="m-card-title">Monitor Gamer 27" IPS 165Hz 1ms HDR</div>
+                            <div class="m-card-pix-price">R$ 1.299,00 <small style="font-size: 10px; color: var(--siemens-text-muted);">no Pix</small></div>
+                            <div class="m-card-points">🪙 +1.299 Game Points</div>
+                        </div>
+                        <button class="btn-buy-m" onclick="addMobileCart('Monitor 165Hz', 1299.00)">+ Carrinho</button>
+                    </div>
+                </div>
+
+                <!-- Produto 4 -->
+                <div class="m-card">
+                    <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=300&q=80" class="m-card-img" alt="Headset 7.1">
+                    <div class="m-card-info">
+                        <div>
+                            <div class="m-card-cat">Áudio</div>
+                            <div class="m-card-title">Headset Gamer 7.1 Surround Som Espacial</div>
+                            <div class="m-card-pix-price">R$ 479,00 <small style="font-size: 10px; color: var(--siemens-text-muted);">no Pix</small></div>
+                            <div class="m-card-points">🪙 +479 Game Points</div>
+                        </div>
+                        <button class="btn-buy-m" onclick="addMobileCart('Headset 7.1', 479.00)">+ Carrinho</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drawer Menu Lateral -->
+            <div id="mDrawerOverlay" class="m-drawer-overlay" onclick="toggleMobileDrawer()"></div>
+            <div id="mDrawer" class="m-drawer">
+                <div>
+                    <div style="font-size: 18px; font-weight: 800; margin-bottom: 20px; color: var(--siemens-cyan);">
+                        🎮 Menu Game Mania
+                    </div>
+                    <div class="m-drawer-item" onclick="alert('Navegando para Hardware')">💻 Hardware & GPUs</div>
+                    <div class="m-drawer-item" onclick="alert('Navegando para Periféricos')">⌨️ Periféricos Gamer</div>
+                    <div class="m-drawer-item" onclick="alert('Navegando para Monitores')">🖥️ Monitores 144Hz+</div>
+                    <div class="m-drawer-item" onclick="alert('Navegando para Consoles')">🎮 Consoles & Controles</div>
+                    <div class="m-drawer-item" onclick="alert('Navegando para Rastreamento')">📦 Rastrear Meu Pedido</div>
+                    <div class="m-drawer-item" onclick="alert('Atendimento ao Cliente: Amador Corrêa Vicente')">💬 Fale Conosco</div>
+                </div>
+                <div style="font-size: 11px; color: var(--siemens-text-muted);">
+                    Versão Mobile • SENAI UC09
+                </div>
+            </div>
+
+            <!-- Modal Bottom-Sheet de Checkout Mobile com 4 Abas Completas -->
+            <div id="mCheckoutOverlay" class="m-checkout-overlay">
+                <div class="m-checkout-sheet" style="max-height: 85vh; overflow-y: auto;">
+                    <div class="m-checkout-header">
+                        <h3>🛍️ Finalização • Checkout Responsivo</h3>
+                        <button class="icon-btn" onclick="closeMobileCheckout()">✕</button>
+                    </div>
+
+                    <div style="font-size: 11px; color: var(--siemens-text-muted); margin-bottom: 10px;">
+                        Cliente: <strong>Amador Corrêa Vicente</strong> • Loja SP
+                    </div>
+
+                    <!-- Resumo Valores -->
+                    <div style="font-size: 12px; margin-bottom: 10px; line-height: 1.5; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Subtotal:</span>
+                            <span id="mSubtotal">R$ 2.388,00</span>
+                        </div>
+                        <div id="mRowDiscount" style="display: none; justify-content: space-between; color: var(--siemens-gold-points);">
+                            <span>Desconto Pontos:</span>
+                            <span>- R$ 17,50</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 14px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px; margin-top: 4px;">
+                            <span>Total do Pedido:</span>
+                            <span style="color: var(--siemens-green-pix)" id="mTotal">R$ 2.029,80</span>
+                        </div>
+                    </div>
+
+                    <!-- Abas de Pagamento Mobile -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 12px;">
+                        <button type="button" id="mTabBtnPix" class="sim-btn active" style="font-size: 10px; padding: 6px 2px; text-align: center;" onclick="setMCheckoutTab('pix')">
+                            ⚡ Pix<br><small style="color: #00E676;">15% OFF</small>
+                        </button>
+                        <button type="button" id="mTabBtnCredit1" class="sim-btn" style="font-size: 10px; padding: 6px 2px; text-align: center;" onclick="setMCheckoutTab('credit1')">
+                            💳 1 Cartão<br><small>Até 12x</small>
+                        </button>
+                        <button type="button" id="mTabBtnCredit2" class="sim-btn" style="font-size: 10px; padding: 6px 2px; text-align: center;" onclick="setMCheckoutTab('credit2')">
+                            💳 2 Cartões<br><small>Dividir</small>
+                        </button>
+                        <button type="button" id="mTabBtnDebit" class="sim-btn" style="font-size: 10px; padding: 6px 2px; text-align: center;" onclick="setMCheckoutTab('debit')">
+                            💳 Débito<br><small>À Vista</small>
+                        </button>
+                    </div>
+
+                    <!-- Conteúdo 1: PIX -->
+                    <div id="mTabPanePix" style="display: block; text-align: center;">
+                        <div style="background: rgba(0, 230, 118, 0.08); border: 1px solid rgba(0, 230, 118, 0.3); border-radius: 8px; padding: 8px; margin-bottom: 10px;">
+                            <div style="font-weight: 800; color: #00E676; font-size: 12px;">⚡ 15% de Desconto no Pix!</div>
+                            <div style="font-size: 11px; color: var(--siemens-text-muted);">
+                                Total: <strong id="mPixTotalDisplay" style="color: #FFF; font-size: 13px;">R$ 2.029,80</strong>
+                            </div>
+                        </div>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=00020126360014br.gov.bcb.pix0114%2B55119612492945204000053039865802BR5916AMADOR%20C%20VICENTE6009SAO%20PAULO62070503***63042D7B" alt="QR Code Pix" style="max-width: 140px; border-radius: 6px; margin: 0 auto 8px; display: block;">
+                        <div style="font-size: 11px; font-weight: 800; color: #FFF; margin-bottom: 2px;">
+                            Favorecido: Amador Corrêa Vicente
+                        </div>
+                        <div style="font-size: 10px; color: var(--siemens-text-muted); margin-bottom: 8px;">
+                            Chave Celular: <strong>11961249294</strong>
+                        </div>
+                        <input type="text" id="mPixCodeInput" value="00020126360014br.gov.bcb.pix0114+55119612492945204000053039865802BR5916AMADOR C VICENTE6009SAO PAULO62070503***63042D7B" readonly style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 6px; border-radius: 4px; font-size: 9px; margin-bottom: 8px;">
+                        <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px;">
+                            <button class="btn-buy-m" style="padding: 8px 12px; font-size: 11px; width: auto;" onclick="copyMPixCode()">
+                                📋 Copiar Código Pix
+                            </button>
+                            <a href="https://wa.me/5511975150157?text=Ol%C3%A1%20Amador%2C%20fiz%20o%20pagamento%20do%20pedido%20na%20Game%20Mania%20pelo%20celular!" target="_blank" class="btn-buy-m" style="text-decoration: none; background: #25D366; color: #FFF; padding: 8px 12px; font-size: 11px; width: auto; display: inline-block;">
+                                WhatsApp ➔
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Conteúdo 2: 1 Cartão de Crédito -->
+                    <div id="mTabPaneCredit1" style="display: none;">
+                        <form onsubmit="event.preventDefault(); processMCardPayment('1 Cartão de Crédito');">
+                            <div style="display: grid; gap: 8px;">
+                                <div>
+                                    <label style="font-size: 10px; color: var(--siemens-text-muted); display: block;">Número do Cartão</label>
+                                    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 8px; border-radius: 6px; font-size: 11px;">
+                                </div>
+                                <div>
+                                    <label style="font-size: 10px; color: var(--siemens-text-muted); display: block;">Nome no Cartão</label>
+                                    <input type="text" placeholder="NOME DO TITULAR" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 8px; border-radius: 6px; font-size: 11px; text-transform: uppercase;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                    <div>
+                                        <label style="font-size: 10px; color: var(--siemens-text-muted); display: block;">Validade (MM/AA)</label>
+                                        <input type="text" placeholder="MM/AA" maxlength="5" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 8px; border-radius: 6px; font-size: 11px;">
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 10px; color: var(--siemens-text-muted); display: block;">CVV</label>
+                                        <input type="text" placeholder="123" maxlength="4" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 8px; border-radius: 6px; font-size: 11px;">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="font-size: 10px; color: var(--siemens-text-muted); display: block;">Parcelamento</label>
+                                    <select style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 8px; border-radius: 6px; font-size: 11px;">
+                                        <option value="1">1x de R$ 2.388,00 à vista</option>
+                                        <option value="2">2x de R$ 1.194,00 sem juros</option>
+                                        <option value="3">3x de R$ 796,00 sem juros</option>
+                                        <option value="6">6x de R$ 398,00 sem juros</option>
+                                        <option value="12">12x de R$ 199,00 sem juros</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-buy-m" style="padding: 10px; font-size: 12px; margin-top: 4px;">
+                                    🔒 Pagar com 1 Cartão
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Conteúdo 3: 2 Cartões de Crédito -->
+                    <div id="mTabPaneCredit2" style="display: none;">
+                        <form onsubmit="event.preventDefault(); processMCardPayment('2 Cartões de Crédito');">
+                            <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 8px; margin-bottom: 8px;">
+                                <div style="font-weight: 800; color: #38bdf8; font-size: 11px; margin-bottom: 4px;">💳 Cartão 1 (R$ 1.194,00)</div>
+                                <input type="text" placeholder="Número Cartão 1" maxlength="19" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 6px; border-radius: 4px; font-size: 11px; margin-bottom: 4px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                                    <input type="text" placeholder="MM/AA" maxlength="5" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 6px; border-radius: 4px; font-size: 11px;">
+                                    <input type="text" placeholder="CVV" maxlength="4" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 6px; border-radius: 4px; font-size: 11px;">
+                                </div>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 8px; margin-bottom: 8px;">
+                                <div style="font-weight: 800; color: #a855f7; font-size: 11px; margin-bottom: 4px;">💳 Cartão 2 (R$ 1.194,00)</div>
+                                <input type="text" placeholder="Número Cartão 2" maxlength="19" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 6px; border-radius: 4px; font-size: 11px; margin-bottom: 4px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                                    <input type="text" placeholder="MM/AA" maxlength="5" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 6px; border-radius: 4px; font-size: 11px;">
+                                    <input type="text" placeholder="CVV" maxlength="4" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 6px; border-radius: 4px; font-size: 11px;">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-buy-m" style="padding: 10px; font-size: 12px; background: linear-gradient(135deg, #0284c7, #7c3aed);">
+                                🔒 Pagar em 2 Cartões
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Conteúdo 4: Débito -->
+                    <div id="mTabPaneDebit" style="display: none;">
+                        <form onsubmit="event.preventDefault(); processMCardPayment('Cartão de Débito');">
+                            <div style="display: grid; gap: 8px;">
+                                <div>
+                                    <label style="font-size: 10px; color: var(--siemens-text-muted); display: block;">Número do Cartão de Débito</label>
+                                    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 8px; border-radius: 6px; font-size: 11px;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                    <div>
+                                        <label style="font-size: 10px; color: var(--siemens-text-muted); display: block;">Validade (MM/AA)</label>
+                                        <input type="text" placeholder="MM/AA" maxlength="5" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 8px; border-radius: 6px; font-size: 11px;">
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 10px; color: var(--siemens-text-muted); display: block;">CVV</label>
+                                        <input type="text" placeholder="123" maxlength="4" required style="width: 100%; box-sizing: border-box; background: #0b1526; color: #FFF; border: 1px solid #334155; padding: 8px; border-radius: 6px; font-size: 11px;">
+                                    </div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; font-size: 11px; color: var(--siemens-text-muted);">
+                                    Valor no débito à vista: <strong style="color: #FFF;">R$ 2.388,00</strong>
+                                </div>
+                                <button type="submit" class="btn-buy-m" style="padding: 10px; font-size: 12px; background: #059669;">
+                                    🔒 Confirmar Pagamento no Débito
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Mensagem de Sucesso -->
+                    <div id="mSuccessBox" style="display: none; text-align: center; padding: 16px 8px;">
+                        <div style="font-size: 36px; margin-bottom: 8px;">✅</div>
+                        <h4 style="font-size: 16px; font-weight: 800; color: #00E676; margin-bottom: 4px;">Pedido Aprovado!</h4>
+                        <p style="font-size: 11px; color: var(--siemens-text-muted); margin-bottom: 12px;">
+                            Pagamento via <strong id="mSuccessMethod" style="color: #FFF;"></strong> confirmado com sucesso.
+                        </p>
+                        <button class="btn-buy-m" style="padding: 8px 16px; font-size: 12px; width: auto;" onclick="closeMobileCheckout()">
+                            Concluir
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation Bar Fixa -->
+        <div class="bottom-nav">
+            <div class="nav-tab active" onclick="setNavTab(this)">
+                <div class="nav-tab-icon">🏠</div>
+                <span>Início</span>
+            </div>
+            <div class="nav-tab" onclick="setNavTab(this); alert('Busca otimizada para mobile ativa.');">
+                <div class="nav-tab-icon">🔍</div>
+                <span>Buscar</span>
+            </div>
+            <div class="nav-tab" onclick="setNavTab(this); alert('Navegando pelo catálogo completo...');">
+                <div class="nav-tab-icon">🎮</div>
+                <span>Catálogo</span>
+            </div>
+            <div class="nav-tab" onclick="setNavTab(this); openMobileCheckout();">
+                <div class="nav-tab-icon">🛒</div>
+                <div class="nav-tab-badge" id="bottomCartCount">2</div>
+                <span>Carrinho</span>
+            </div>
+            <div class="nav-tab" onclick="setNavTab(this); alert('Perfil do Cliente: Amador Corrêa Vicente\nSaldo: 350 Game Points');">
+                <div class="nav-tab-icon">👤</div>
+                <span>Perfil</span>
             </div>
         </div>
     </div>
 
-    <!-- Modal Conta -->
-    <div id="modalAccount" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'modalAccount')">
-        <div class="modal-box">
-            <button class="modal-close-btn" onclick="closeModal('modalAccount')">✕</button>
-            <h3 style="font-size: 17px; font-weight: 900; margin-bottom: 14px;">👤 Central do Aluno / Cliente</h3>
-            <div style="background-color: var(--siemens-navy); padding: 14px; border-radius: 10px; font-size: 13px; margin-bottom: 14px;">
-                <div><strong>Amador Corrêa Vicente</strong></div>
-                <div style="color: var(--siemens-text-muted); font-size: 12px; margin-top: 2px;">SENAI Escola Jorge Mahfuz • UC09 Codificação Front-End</div>
-                <div style="color: var(--siemens-gold-points); font-weight: 700; margin-top: 8px;">🪙 Saldo: 350 Game Points (R$ 17,50)</div>
-            </div>
-            <button class="btn-banner" style="width: 100%; background: var(--siemens-card-bg); border: 1px solid var(--siemens-card-border);" onclick="closeModal('modalAccount')">Fechar</button>
-        </div>
-    </div>
-
-    <!-- Modal Detalhe -->
-    <div id="modalDetail" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'modalDetail')">
-        <div class="modal-box">
-            <button class="modal-close-btn" onclick="closeModal('modalDetail')">✕</button>
-            <div id="modalDetailContent"></div>
-        </div>
+    <!-- Nota de Governança -->
+    <div class="sim-footer-note">
+        Documento gerado com apoio de Inteligência Artificial — Mockup Responsivo Mobile & Tablet (SENAI UC09 | Paleta Siemens)
     </div>
 
     <script>
-        const products = [
-            { id: 0, name: "RTX 4060 8GB GDDR6", category: "hardware", categoryName: "Hardware", price: 1999.00, pricePix: 1699.15, points: 1999, img: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=400&q=80", desc: "Placa gráfica com DLSS 3 e Ray Tracing. Alta performance em 1080p e 1440p." },
-            { id: 1, name: "Ryzen 7 5700X3D 8-Core", category: "hardware", categoryName: "Hardware", price: 1349.00, pricePix: 1146.65, points: 1349, img: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=400&q=80", desc: "Equipado com 3D V-Cache para altíssimas taxas de quadros em jogos competitivos." },
-            { id: 2, name: "Monitor 27\" IPS 165Hz", category: "monitores", categoryName: "Monitores", price: 1499.00, pricePix: 1274.15, points: 1499, img: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=400&q=80", desc: "Painel Fast IPS com 165Hz e 1ms de resposta com tecnologia FreeSync." },
-            { id: 3, name: "Teclado Mecânico RGB", category: "perifericos", categoryName: "Periféricos", price: 389.00, pricePix: 330.65, points: 389, img: "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=400&q=80", desc: "Switches lineares silenciosos, layout ABNT2 e corpo em alumínio." },
-            { id: 4, name: "Headset 7.1 Surround", category: "perifericos", categoryName: "Periféricos", price: 499.90, pricePix: 424.91, points: 500, img: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=400&q=80", desc: "Áudio 3D imersivo com microfone antirruído e almofadas de alto conforto." },
-            { id: 5, name: "Mouse Sem Fio 60g 26K", category: "perifericos", categoryName: "Periféricos", price: 459.00, pricePix: 390.15, points: 459, img: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=400&q=80", desc: "Sensor de alta precisão 26.000 DPI e bateria para 90 horas seguidas." },
-            { id: 6, name: "Cadeira Gamer 180°", category: "cadeiras", categoryName: "Cadeiras", price: 1190.00, pricePix: 1011.50, points: 1190, img: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&w=400&q=80", desc: "Ergonomia máxima com almofadas magnéticas e pistão com certificação Classe 4." },
-            { id: 7, name: "Water Cooler 360mm RGB", category: "hardware", categoryName: "Hardware", price: 649.00, pricePix: 551.65, points: 649, img: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=400&q=80", desc: "Radiador triplo de 360mm para arrefecimento extremo com visual ARGB." }
-        ];
+        // Variáveis de Estado
+        let mTotalValue = 2288.00;
+        let mPointsActive = false;
 
-        let cart = [
-            { id: 0, name: "RTX 4060 8GB GDDR6", price: 1999.00, img: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=150&q=80" },
-            { id: 3, name: "Teclado Switch Red RGB", price: 389.00, img: "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=150&q=80" }
-        ];
+        // Alternador de Viewport (Mobile vs Tablet)
+        function setMode(mode) {
+            const wrapper = document.getElementById('deviceWrapper');
+            const btnM = document.getElementById('btnMobile');
+            const btnT = document.getElementById('btnTablet');
 
-        function renderProducts(list) {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = '';
-            list.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="product-thumb-container" onclick="openDetail(${p.id})">
-                        <img src="${p.img}" alt="${p.name}" class="product-thumb">
-                    </div>
-                    <div class="product-category">${p.categoryName}</div>
-                    <div class="product-name" onclick="openDetail(${p.id})">${p.name}</div>
-                    <div>
-                        <div class="price-pix">R$ ${p.pricePix.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                        <div class="price-term">12x de R$ ${(p.price/12).toLocaleString('pt-BR', {maximumFractionDigits: 2})}</div>
-                    </div>
-                    <button class="btn-buy-mobile" onclick="addToCart(${p.id})">+ Carrinho</button>
-                `;
-                grid.appendChild(card);
-            });
-            document.getElementById('itemCount').innerText = `${list.length} itens`;
-        }
-
-        function filterCategory(cat) {
-            document.querySelectorAll('.category-chip').forEach(el => el.classList.remove('active'));
-            const tab = document.getElementById('tab-' + cat);
-            if (tab) tab.classList.add('active');
-
-            if (cat === 'todos') {
-                renderProducts(products);
+            if (mode === 'mobile') {
+                wrapper.className = 'device-wrapper mobile-mode';
+                btnM.classList.add('active');
+                btnT.classList.remove('active');
             } else {
-                renderProducts(products.filter(p => p.category === cat));
+                wrapper.className = 'device-wrapper tablet-mode';
+                btnT.classList.add('active');
+                btnM.classList.remove('active');
             }
         }
 
-        function handleSearch(val) {
-            if (val.trim().length >= 2) {
-                renderProducts(products.filter(p => p.name.toLowerCase().includes(val.toLowerCase())));
+        // Drawer Menu Mobile
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mDrawer');
+            const overlay = document.getElementById('mDrawerOverlay');
+            if (drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                overlay.style.display = 'none';
             } else {
-                renderProducts(products);
+                drawer.classList.add('open');
+                overlay.style.display = 'block';
             }
         }
 
-        function renderCart() {
-            const list = document.getElementById('cartItemsMobile');
-            list.innerHTML = '';
-            let subtotal = 0;
+        // Bottom Navigation Active State
+        function setNavTab(el) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        }
 
-            cart.forEach((c, idx) => {
-                subtotal += c.price;
-                const div = document.createElement('div');
-                div.className = 'cart-item-card';
-                div.innerHTML = `
-                    <img src="${c.img}" alt="${c.name}" class="cart-item-img">
-                    <div class="cart-item-details">
-                        <div class="cart-item-title">${c.name}</div>
-                        <div class="cart-item-meta">Qtd: 1 un</div>
-                        <div class="cart-item-price">R$ ${c.price.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                    </div>
-                    <button class="btn-cart-remove" onclick="removeFromCart(${idx})">✕</button>
-                `;
-                list.appendChild(div);
+        // Checkout Mobile Bottom-Sheet
+        function openMobileCheckout() {
+            document.getElementById('mCheckoutOverlay').style.display = 'flex';
+        }
+
+        function closeMobileCheckout() {
+            document.getElementById('mCheckoutOverlay').style.display = 'none';
+        }
+
+        function toggleMPoints() {
+            mPointsActive = !mPointsActive;
+            const btn = document.getElementById('mBtnPoints');
+            const row = document.getElementById('mRowDiscount');
+            let finalVal = mTotalValue;
+
+            if (mPointsActive) {
+                btn.innerText = 'Aplicado (✓)';
+                btn.style.background = '#10B981';
+                btn.style.color = '#fff';
+                row.style.display = 'flex';
+                finalVal -= 17.50;
+            } else {
+                btn.innerText = 'Usar Pontos';
+                btn.style.background = '#F59E0B';
+                btn.style.color = '#000';
+                row.style.display = 'none';
+            }
+            document.getElementById('mTotal').innerText = 'R$ ' + finalVal.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        }
+
+        function confirmMobileOrder() {
+            const total = document.getElementById('mTotal').innerText;
+            alert('🎉 Pedido Simulado via Mobile!\nTotal: ' + total + '\nPontos acumulados: +2.288 Game Points creditados.\nPronto para retirada no Centro de SP.');
+            closeMobileCheckout();
+        }
+
+        function addMobileCart(item, price) {
+            mTotalValue += price;
+            const c1 = document.getElementById('mobileCartCount');
+            const c2 = document.getElementById('bottomCartCount');
+            const count = parseInt(c1.innerText) + 1;
+            c1.innerText = count;
+            c2.innerText = count;
+            document.getElementById('mSubtotal').innerText = 'R$ ' + mTotalValue.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            document.getElementById('mTotal').innerText = 'R$ ' + mTotalValue.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            alert('✓ ' + item + ' adicionado ao carrinho com reserva de 15 minutos!');
+        }
+
+        function setMCheckoutTab(tab) {
+            const tabs = ['pix', 'credit1', 'credit2', 'debit'];
+            tabs.forEach(t => {
+                const pane = document.getElementById('mTabPane' + t.charAt(0).toUpperCase() + t.slice(1));
+                const btn = document.getElementById('mTabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (t === tab) {
+                    if (pane) pane.style.display = 'block';
+                    if (btn) { btn.classList.add('active'); btn.style.background = 'var(--siemens-teal)'; }
+                } else {
+                    if (pane) pane.style.display = 'none';
+                    if (btn) { btn.classList.remove('active'); btn.style.background = '#07101C'; }
+                }
             });
-
-            const discount = subtotal * 0.15;
-            const totalPix = subtotal - discount;
-
-            document.getElementById('cartSubtotalMobile').innerText = 'R$ ' + subtotal.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-            document.getElementById('cartPixDiscountMobile').innerText = '- R$ ' + discount.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-            document.getElementById('cartTotalMobile').innerText = 'R$ ' + totalPix.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-            document.getElementById('cartCount').innerText = cart.length;
         }
 
-        function addToCart(id) {
-            const p = products.find(x => x.id === id);
-            if (p) {
-                cart.push({ id: p.id, name: p.name, price: p.price, img: p.img });
-                renderCart();
-                openModal('modalCart');
-            }
-        }
-
-        function removeFromCart(idx) {
-            cart.splice(idx, 1);
-            renderCart();
-        }
-
-        function openDetail(id) {
-            const p = products.find(x => x.id === id);
-            if (!p) return;
-            const content = document.getElementById('modalDetailContent');
-            content.innerHTML = `
-                <img src="${p.img}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 12px;">
-                <h4 style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">${p.name}</h4>
-                <p style="font-size: 12px; color: var(--siemens-text-muted); margin-bottom: 12px;">${p.desc}</p>
-                <div style="background: var(--siemens-navy); padding: 12px; border-radius: 8px; margin-bottom: 14px;">
-                    <div style="font-size: 20px; font-weight: 900; color: var(--siemens-green-pix)">R$ ${p.pricePix.toLocaleString('pt-BR', {minimumFractionDigits: 2})} no Pix</div>
-                    <div style="font-size: 11px; color: var(--siemens-gold-points); font-weight: 700; margin-top: 4px;">🪙 +${p.points} Game Points</div>
-                </div>
-                <button class="btn-banner" style="width: 100%;" onclick="addToCart(${p.id}); closeModal('modalDetail');">Comprar Agora</button>
-            `;
-            openModal('modalDetail');
-        }
-
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        function closeModalOnBackdrop(e, id) {
-            if (e.target.id === id) closeModal(id);
-        }
-
-        function copyPixCodeMobile() {
-            const input = document.getElementById('pixCodeInputMobile');
+        function copyMPixCode() {
+            const input = document.getElementById('mPixCodeInput');
             input.select();
-            input.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(input.value);
-            alert('✅ Pix Copia e Cola copiado com sucesso!');
+            alert('Código Pix copiado para a área de transferência!');
         }
 
-        renderProducts(products);
-        renderCart();
+        function processMCardPayment(methodName) {
+            document.getElementById('mTabPanePix').style.display = 'none';
+            document.getElementById('mTabPaneCredit1').style.display = 'none';
+            document.getElementById('mTabPaneCredit2').style.display = 'none';
+            document.getElementById('mTabPaneDebit').style.display = 'none';
+            document.getElementById('mSuccessMethod').innerText = methodName;
+            document.getElementById('mSuccessBox').style.display = 'block';
+        }
+
+        // Cronômetro Regressivo
+        let mSecs = 14 * 60 + 38;
+        setInterval(() => {
+            if (mSecs > 0) {
+                mSecs--;
+                const min = Math.floor(mSecs / 60);
+                const s = mSecs % 60;
+                document.getElementById('mTimer').innerText = 
+                    (min < 10 ? '0' : '') + min + ':' + (s < 10 ? '0' : '') + s;
+            }
+        }, 1000);
     </script>
 </body>
 </html>
